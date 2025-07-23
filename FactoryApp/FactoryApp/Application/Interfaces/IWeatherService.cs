@@ -1,4 +1,4 @@
-﻿using WeatherApp.Application.DTOs;
+﻿using FactoryApp.Application.DTOs;
 
 namespace WeatherApp.Application.Interfaces;
 

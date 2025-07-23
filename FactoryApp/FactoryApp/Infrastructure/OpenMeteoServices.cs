@@ -1,6 +1,4 @@
 ﻿using FactoryApp.Application.DTOs;
-using System.Net.Http.Json;
-using WeatherApp.Application.DTOs;
 using WeatherApp.Application.Interfaces;
 
 namespace WeatherApp.Infrastructure;
