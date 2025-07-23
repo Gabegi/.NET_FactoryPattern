@@ -1,27 +1,29 @@
 using WeatherApp.Application.Interfaces;
 using WeatherApp.Infrastructure;
 
-class Program
+var builder = WebApplication.CreateBuilder(args);
+
+// Register services
+builder.Services.AddControllers();
+
+// Add Swagger (optional but recommended for API testing)
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// If you want to inject IWeatherService, you can register it like this:
+// builder.Services.AddHttpClient<IWeatherService, OpenMeteoService>();
+
+var app = builder.Build();
+
+// Enable Swagger in Development
+if (app.Environment.IsDevelopment())
 {
-    static async Task Main()
-    {
-        Console.Write("Enter weather provider (e.g., openmeteo): ");
-        var provider = Console.ReadLine()?.Trim() ?? "openmeteo";
-
-        IWeatherService weatherService = WeatherServiceFactory.Create(provider);
-
-        Console.WriteLine("Fetching weather for London (51.5, -0.1)...");
-
-        var weather = await weatherService.GetCurrentWeatherAsync(51.5, -0.1);
-
-        if (weather == null)
-        {
-            Console.WriteLine("Could not fetch weather.");
-        }
-        else
-        {
-            Console.WriteLine($"Temperature: {weather.Temperature}{weather.Units}");
-            Console.WriteLine($"Wind Speed: {weather.WindSpeed} km/h");
-        }
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.MapControllers();
+
+app.Run();
