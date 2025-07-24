@@ -1,6 +1,3 @@
-using WeatherApp.Application.Interfaces;
-using WeatherApp.Infrastructure;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Register services
