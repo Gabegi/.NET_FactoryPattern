@@ -1,4 +1,4 @@
-﻿namespace FactoryApp.Application.DTOs
+﻿namespace FactoryApp.Controllers.DTOs
 {
     public class WeatherInfo
     {
