@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using DependencyInjectionApp.Application.UseCases;
-using DependencyInjectionApp.Domain.Entities;
 
 namespace DependencyInjectionApp.Presentation.Controllers;
 
@@ -24,16 +23,7 @@ public class WeatherController : ControllerBase
             if (weather == null)
                 return NotFound("Could not fetch weather.");
 
-            return Ok(new
-            {
-                Temperature = weather.Temperature,
-                WindSpeed = weather.WindSpeed,
-                Units = weather.Units,
-                Timestamp = weather.Timestamp,
-                IsCold = weather.IsCold,
-                IsWarm = weather.IsWarm,
-                IsWindy = weather.IsWindy
-            });
+            return Ok(weather);
         }
         catch (ArgumentException ex)
         {
