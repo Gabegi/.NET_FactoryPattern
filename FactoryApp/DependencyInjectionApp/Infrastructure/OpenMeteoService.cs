@@ -1,9 +1,9 @@
-using DependencyInjectionApp.Application.Interfaces;
-using DependencyInjectionApp.Controllers.DTOs;
+using DependencyInjectionApp.Domain.Entities;
+using DependencyInjectionApp.Infrastructure.Interfaces;
 
 namespace DependencyInjectionApp.Infrastructure;
 
-public class OpenMeteoService : IWeatherRepository
+public class OpenMeteoService : IWeatherService
 {
     private readonly HttpClient _httpClient;
 
@@ -24,6 +24,11 @@ public class OpenMeteoService : IWeatherRepository
             Temperature = response.CurrentWeather.Temperature,
             WindSpeed = response.CurrentWeather.Windspeed
         };
+    }
+
+    Task<Weather?> IWeatherService.GetCurrentWeatherAsync(double latitude, double longitude)
+    {
+        throw new NotImplementedException();
     }
 
     private class OpenMeteoResponse
