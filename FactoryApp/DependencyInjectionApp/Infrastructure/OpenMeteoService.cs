@@ -14,7 +14,7 @@ public class OpenMeteoService : IWeatherService
         _httpClient = httpClient;
     }
 
-    public async Task<WeatherResponse?> IWeatherService.GetCurrentWeatherAsync(double latitude, double longitude)
+    public async Task<WeatherResponse?> GetCurrentWeatherAsync(double latitude, double longitude)
     {
         string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
 
