@@ -24,13 +24,6 @@ internal class Program
 
         var app = builder.Build();
 
-        // Enable Swagger in Development
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-
-        }
-
         app.UseHttpsRedirection();
 
         app.MapControllers();
