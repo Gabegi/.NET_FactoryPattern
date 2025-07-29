@@ -1,7 +1,6 @@
 using DependencyInjectionApp.Application.UseCases;
 using DependencyInjectionApp.Infrastructure;
 using DependencyInjectionApp.Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Builder;
 
 internal class Program
 {
