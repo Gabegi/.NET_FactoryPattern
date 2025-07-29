@@ -5,7 +5,7 @@ namespace DependencyInjectionApp.Infrastructure;
 
 public class MockWeatherService : IWeatherService
 {
-    public async Task<WeatherResponse?> IWeatherService.GetCurrentWeatherAsync(double latitude, double longitude)
+    public async Task<WeatherResponse?> GetCurrentWeatherAsync(double latitude, double longitude)
     {
         // Simulate network delay
         await Task.Delay(100);
