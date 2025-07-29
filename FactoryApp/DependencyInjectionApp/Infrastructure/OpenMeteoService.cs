@@ -14,17 +14,13 @@ public class OpenMeteoService : IWeatherService
         _httpClient = httpClient;
     }
 
-    public async Task<Weather?> IWeatherService.GetCurrentWeatherAsync(double latitude, double longitude)
+    public async Task<WeatherResponse?> IWeatherService.GetCurrentWeatherAsync(double latitude, double longitude)
     {
         string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
 
         var response = await _httpClient.GetFromJsonAsync<WeatherResponse>(url);
-        if (response?.CurrentWeather == null) return null;
+        if (response?.Temperature == null) return null;
 
-        return new CurrentWeatherData
-        {
-            Temperature = response.CurrentWeather.Temperature,
-            WindSpeed = response.CurrentWeather.Windspeed
-        };
+        return response;
     }
 } 
