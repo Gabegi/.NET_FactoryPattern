@@ -12,33 +12,17 @@ public class OpenMeteoService : IWeatherService
         _httpClient = httpClient;
     }
 
-    public async Task<WeatherInfo?> GetCurrentWeatherAsync(double latitude, double longitude)
+    public async Task<Weather?> IWeatherService.GetCurrentWeatherAsync(double latitude, double longitude)
     {
         string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
 
         var response = await _httpClient.GetFromJsonAsync<OpenMeteoResponse>(url);
         if (response?.CurrentWeather == null) return null;
 
-        return new WeatherInfo
+        return new OpenMeteoResponse
         {
             Temperature = response.CurrentWeather.Temperature,
             WindSpeed = response.CurrentWeather.Windspeed
         };
-    }
-
-    Task<Weather?> IWeatherService.GetCurrentWeatherAsync(double latitude, double longitude)
-    {
-        throw new NotImplementedException();
-    }
-
-    private class OpenMeteoResponse
-    {
-        public CurrentWeatherData? CurrentWeather { get; set; }
-
-        public class CurrentWeatherData
-        {
-            public double Temperature { get; set; }
-            public double Windspeed { get; set; }
-        }
     }
 } 
