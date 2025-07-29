@@ -1,6 +1,7 @@
 using DependencyInjectionApp.Application.UseCases;
 using DependencyInjectionApp.Infrastructure;
 using DependencyInjectionApp.Infrastructure.Interfaces;
+using Swashbuckle.AspNetCore.Swagger;
 
 internal class Program
 {
@@ -11,8 +12,6 @@ internal class Program
         // Register services
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
         builder.Services.AddHttpClient();
 
 
@@ -29,7 +28,6 @@ internal class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
 
         }
 
