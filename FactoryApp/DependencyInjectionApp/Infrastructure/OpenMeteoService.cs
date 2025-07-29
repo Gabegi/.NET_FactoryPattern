@@ -3,7 +3,7 @@ using DependencyInjectionApp.Controllers.DTOs;
 
 namespace DependencyInjectionApp.Infrastructure;
 
-public class OpenMeteoService : IWeatherService
+public class OpenMeteoService : IWeatherRepository
 {
     private readonly HttpClient _httpClient;
 
