@@ -1,6 +1,22 @@
-# Dependency Injection Weather App
+# Dependency Injection Weather App (Clean Architecture)
 
-This project demonstrates the same weather API functionality as the FactoryApp, but implemented using **Dependency Injection** instead of the Factory Pattern.
+This project demonstrates the same weather API functionality as the FactoryApp, but implemented using **Dependency Injection** and **Clean Architecture** principles.
+
+## Clean Architecture Structure
+
+```
+DependencyInjectionApp/
+├── Domain/                    # Core business logic
+│   ├── Entities/             # Domain entities (Weather)
+│   └── Interfaces/           # Repository interfaces
+├── Application/              # Application business rules
+│   └── UseCases/            # Use cases (GetCurrentWeatherUseCase)
+├── Infrastructure/           # External concerns
+│   ├── Services/            # Repository implementations
+│   └── DTOs/               # Data transfer objects for external APIs
+└── Presentation/            # User interface
+    └── Controllers/         # API controllers
+```
 
 ## Key Differences from Factory Pattern
 
@@ -10,72 +26,42 @@ This project demonstrates the same weather API functionality as the FactoryApp, 
 - Manually creates dependencies (`HttpClient`)
 - Direct instantiation in the controller
 - Harder to test and mock
+- No clear separation of concerns
 
-### Dependency Injection (This App)
+### Clean Architecture with DI (This App)
 
+- **Domain Layer**: Core business entities and interfaces
+- **Application Layer**: Use cases and business rules
+- **Infrastructure Layer**: External services and data access
+- **Presentation Layer**: Controllers and API endpoints
 - Services are registered in the DI container
 - Dependencies are automatically injected
-- Easier to test and mock
-- Better separation of concerns
-- More flexible and maintainable
+- Easy to test and mock
+- Clear separation of concerns
 
 ## Implementation Details
 
-### Service Registration
+The application follows Clean Architecture principles with clear separation between layers:
 
-```csharp
-// In Program.cs
-builder.Services.AddHttpClient();
-builder.Services.AddScoped<IWeatherService, OpenMeteoService>();
+- **Domain Layer**: Contains the Weather entity and IWeatherRepository interface
+- **Application Layer**: Contains use cases that implement business rules and validation
+- **Infrastructure Layer**: Contains repository implementations and DTOs for external APIs
+- **Presentation Layer**: Contains controllers that handle HTTP requests
 
-// To use mock service instead:
-// builder.Services.AddScoped<IWeatherService, MockWeatherService>();
-```
+Services are registered in the DI container in Program.cs, making it easy to swap implementations (e.g., real vs mock repositories).
 
-### Controller Usage
+## Benefits of Clean Architecture with DI
 
-```csharp
-public class WeatherController : ControllerBase
-{
-    private readonly IWeatherService _weatherService;
+1. **Separation of Concerns**: Each layer has a specific responsibility
+2. **Testability**: Easy to mock dependencies for unit testing
+3. **Flexibility**: Easy to swap implementations
+4. **Maintainability**: Clear structure makes code easier to understand
+5. **Domain-Driven Design**: Business logic is isolated in the domain layer
+6. **Dependency Inversion**: High-level modules don't depend on low-level modules
 
-    public WeatherController(IWeatherService weatherService) // Injected by DI
-    {
-        _weatherService = weatherService;
-    }
-}
-```
+## Testing
 
-## Benefits of Dependency Injection
-
-1. **Testability**: Easy to mock services for unit testing
-2. **Flexibility**: Easy to swap implementations
-3. **Lifetime Management**: DI container manages object lifetimes
-4. **Loose Coupling**: Components don't create their own dependencies
-5. **Configuration**: Centralized service configuration
-
-## Testing Example
-
-With DI, testing becomes much easier:
-
-```csharp
-[Test]
-public async Task WeatherController_Get_ReturnsWeatherData()
-{
-    // Arrange
-    var mockWeatherService = new Mock<IWeatherService>();
-    mockWeatherService.Setup(x => x.GetCurrentWeatherAsync(51.5, -0.1))
-        .ReturnsAsync(new WeatherInfo { Temperature = 22.5, WindSpeed = 5.2 });
-
-    var controller = new WeatherController(mockWeatherService.Object);
-
-    // Act
-    var result = await controller.Get(51.5, -0.1);
-
-    // Assert
-    Assert.IsInstanceOf<OkObjectResult>(result);
-}
-```
+With Clean Architecture and DI, testing becomes much easier as you can easily mock dependencies and test each layer independently.
 
 ## Running the Application
 
@@ -91,3 +77,5 @@ The API will be available at:
 ## API Endpoints
 
 - `GET /api/weather?lat=51.5&lon=-0.1` - Get current weather for specified coordinates
+
+The response includes domain logic with properties like temperature, wind speed, units, timestamp, and weather conditions (isCold, isWarm, isWindy).
