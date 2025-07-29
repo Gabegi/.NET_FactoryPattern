@@ -1,5 +1,4 @@
 using DependencyInjectionApp.Domain.Entities;
-using DependencyInjectionApp.Domain.Interfaces;
 
 namespace DependencyInjectionApp.Application.UseCases;
 
