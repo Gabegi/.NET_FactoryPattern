@@ -4,5 +4,5 @@ namespace DependencyInjectionApp.Infrastructure.Interfaces;
 
 public interface IWeatherService
 {
-    Task<OpenMeteoResponse?> GetCurrentWeatherAsync(double latitude, double longitude);
+    Task<WeatherResponse?> GetCurrentWeatherAsync(double latitude, double longitude);
 } 
