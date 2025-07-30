@@ -1,7 +1,7 @@
 using DependencyInjectionApp.Domain.Entities;
-using DependencyInjectionApp.Infrastructure.DTOs;
 using DependencyInjectionApp.Infrastructure.Interfaces;
-using static DependencyInjectionApp.Infrastructure.DTOs.WeatherResponse;
+using DependencyInjectionApp.Presentation.DTOs;
+using static DependencyInjectionApp.Presentation.DTOs.WeatherResponse;
 
 namespace DependencyInjectionApp.Infrastructure;
 
@@ -9,7 +9,7 @@ public class OpenMeteoService : IWeatherService
 {
     private static readonly HttpClient _httpClient;
 
-    public async Task<WeatherResponse?> GetCurrentWeatherAsync(double latitude, double longitude)
+    public async Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude)
     {
         string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
 

@@ -1,8 +1,8 @@
-using DependencyInjectionApp.Infrastructure.DTOs;
+using DependencyInjectionApp.Domain.Entities;
 
 namespace DependencyInjectionApp.Infrastructure.Interfaces;
 
 public interface IWeatherService
 {
-    Task<WeatherResponse?> GetCurrentWeatherAsync(double latitude, double longitude);
+    Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude);
 } 

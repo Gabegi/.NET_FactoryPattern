@@ -1,4 +1,4 @@
-namespace DependencyInjectionApp.Infrastructure.DTOs;
+namespace DependencyInjectionApp.Presentation.DTOs;
 
 public class WeatherResponse
 {
