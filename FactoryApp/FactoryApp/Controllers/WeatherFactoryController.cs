@@ -6,11 +6,11 @@ namespace WeatherApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class WeatherController : ControllerBase
+public class WeatherFactoryController : ControllerBase
 {
     private readonly IWeatherService _weatherService;
 
-    public WeatherController()
+    public WeatherFactoryController()
     {
         // Direct factory usage (for demo; in production use DI)
         _weatherService = WeatherServiceFactory.Create("openmeteo");
