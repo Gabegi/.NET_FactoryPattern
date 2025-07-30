@@ -1,7 +1,6 @@
 using DependencyInjectionApp.Application.UseCases;
 using DependencyInjectionApp.Infrastructure;
 using DependencyInjectionApp.Infrastructure.Interfaces;
-using Swashbuckle.AspNetCore.Swagger;
 
 internal class Program
 {

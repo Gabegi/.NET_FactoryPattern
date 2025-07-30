@@ -7,7 +7,12 @@ namespace DependencyInjectionApp.Infrastructure;
 
 public class OpenMeteoService : IWeatherService
 {
-    private static readonly HttpClient _httpClient;
+    private readonly HttpClient _httpClient;
+
+    public OpenMeteoService(IHttpClientFactory httpClientFactory)
+    {
+        _httpClient = httpClientFactory.CreateClient();
+    }
 
     public async Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude)
     {
