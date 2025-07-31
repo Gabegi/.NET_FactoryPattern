@@ -24,7 +24,7 @@ internal class Program
 
 
         // To use mock repository instead:
-        // builder.Services.AddScoped<IWeatherRepository, MockWeatherRepository>();
+        builder.Services.AddScoped<IWeatherService, MockWeatherService>();
         builder.Services.AddScoped<IWeatherService, OpenMeteoService>();
         builder.Services.AddScoped<GetCurrentWeatherUseCase>();
         builder.Services.AddLogging();
