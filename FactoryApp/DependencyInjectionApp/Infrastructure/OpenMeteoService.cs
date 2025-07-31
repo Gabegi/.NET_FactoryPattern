@@ -6,10 +6,17 @@ namespace DependencyInjectionApp.Infrastructure;
 public class OpenMeteoService : IWeatherService
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<OpenMeteoService> _logger;
+    private readonly IConfiguration _configuration;
 
-    public OpenMeteoService(IHttpClientFactory httpClientFactory)
+    public OpenMeteoService(
+        IHttpClientFactory httpClientFactory,
+        ILogger<OpenMeteoService> logger,
+        IConfiguration configuration)
     {
-        _httpClient = httpClientFactory.CreateClient();
+        _httpClient = httpClientFactory.CreateClient("WeatherApi");
+        _logger = logger;
+        _configuration = configuration;
     }
 
     public async Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude)
