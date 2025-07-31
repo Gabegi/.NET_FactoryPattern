@@ -11,15 +11,25 @@ internal class Program
         // Register services
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddHttpClient();
+        // Register HttpClient with configuration from appsettings
+        builder.Services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
+        {
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var timeoutSeconds = configuration.GetValue<int>("WeatherApi:TimeoutSeconds", 30);
+            var userAgent = configuration.GetValue<string>("WeatherApi:UserAgent", "WeatherApp/1.0");
+
+            client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+            client.DefaultRequestHeaders.Add("User-Agent", userAgent);
+        });
 
 
         // To use mock repository instead:
         // builder.Services.AddScoped<IWeatherRepository, MockWeatherRepository>();
         builder.Services.AddScoped<IWeatherService, OpenMeteoService>();
         builder.Services.AddScoped<GetCurrentWeatherUseCase>();
+        builder.Services.AddLogging();
 
-        
+
 
         var app = builder.Build();
 
