@@ -21,15 +21,16 @@ public class GetCurrentWeatherUseCase
         if (longitude < -180 || longitude > 180)
             throw new ArgumentException("Longitude must be between -180 and 180 degrees");
 
-        var weatherResponse = await _weatherService.GetCurrentWeatherAsync(latitude, longitude);
-        if (weatherResponse == null) return null;
+        var weather = await _weatherService.GetCurrentWeatherAsync(latitude, longitude);
+        if (weather == null) return null;
 
         return new Weather
         {
-            Temperature = weatherResponse.Temperature,
-            WindSpeed = weatherResponse.WindSpeed,
-            Units = weatherResponse.Units,
-            Timestamp = weatherResponse.Timestamp
+            Latitude = weather.Latitude,
+            Longitude = weather.Longitude,
+            Generationtime_ms = weather.Generationtime_ms,
+            Utc_offset_seconds = weather.Utc_offset_seconds,
+
         };
     }
 } 
