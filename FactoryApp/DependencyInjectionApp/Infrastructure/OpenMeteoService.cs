@@ -44,14 +44,5 @@ public class OpenMeteoService : IWeatherService
             _logger.LogError(ex, "Failed to fetch weather data");
             return null;
         }
-
-
-
-
-        //string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
-
-        //var response = await _httpClient.GetFromJsonAsync<Weather>(url);
-
-        //return response;
     }
 } 
