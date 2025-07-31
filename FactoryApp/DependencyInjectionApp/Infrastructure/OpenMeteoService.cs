@@ -21,10 +21,37 @@ public class OpenMeteoService : IWeatherService
 
     public async Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude)
     {
-        string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
+        try
+        {
+            var apiUrl = _configuration["WeatherApi:BaseUrl"] ?? "https://api.open-meteo.com/v1";
+            var url = $"{apiUrl}/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
 
-        var response = await _httpClient.GetFromJsonAsync<Weather>(url);
+            _logger.LogInformation("Fetching weather data for coordinates: {Lat}, {Lon}", latitude, longitude);
 
-        return response;
+            var response = await _httpClient.GetFromJsonAsync<Weather>(url);
+
+            if (response?.Current_weather == null)
+            {
+                _logger.LogWarning("No weather data received for coordinates: {Lat}, {Lon}", latitude, longitude);
+                return null;
+            }
+
+            return response;
+            
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Failed to fetch weather data");
+            return null;
+        }
+
+
+
+
+        //string url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
+
+        //var response = await _httpClient.GetFromJsonAsync<Weather>(url);
+
+        //return response;
     }
 } 
