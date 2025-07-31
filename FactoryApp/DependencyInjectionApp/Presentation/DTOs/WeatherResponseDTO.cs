@@ -1,6 +1,6 @@
 namespace DependencyInjectionApp.Presentation.DTOs;
 
-public class WeatherResponse
+public class WeatherResponseDTO
 {
     public double Latitude { get; set; }
     public double Longitude { get; set; }
