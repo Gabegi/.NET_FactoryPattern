@@ -1,7 +1,5 @@
 using DependencyInjectionApp.Domain.Entities;
 using DependencyInjectionApp.Infrastructure.Interfaces;
-using DependencyInjectionApp.Presentation.DTOs;
-using static DependencyInjectionApp.Presentation.DTOs.WeatherResponseDTO;
 
 namespace DependencyInjectionApp.Infrastructure;
 
