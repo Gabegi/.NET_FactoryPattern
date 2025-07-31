@@ -13,7 +13,7 @@ public class GetCurrentWeatherUseCase
         _weatherService = weatherService;
     }
 
-    public async Task<Weather?> ExecuteAsync(double latitude, double longitude)
+    public async Task<WeatherResponseDTO?> ExecuteAsync(double latitude, double longitude)
     {
         // Application logic can be added here (validation, business rules, etc.)
         if (latitude < -90 || latitude > 90)
@@ -34,7 +34,7 @@ public class GetCurrentWeatherUseCase
             Timezone = weather.Timezone,
             Timezone_abbreviation = weather.Timezone_abbreviation,
             Elevation = weather.Elevation,
-            Current_weather_units = new DTOs.CurrentWeatherUnits
+            Current_weather_units = new CurrentWeatherUnitsDto
             {
                 Time = weather.Current_weather_units.Time,
                 Interval = weather.Current_weather_units.Interval,
@@ -44,7 +44,7 @@ public class GetCurrentWeatherUseCase
                 Is_day = weather.Current_weather_units.Is_day,
                 Weathercode = weather.Current_weather_units.Weathercode
             },
-            Current_weather = new DTOs.CurrentWeather
+            Current_weather = new CurrentWeatherDto
             {
                 Time = weather.Current_weather.Time,
                 Interval = weather.Current_weather.Interval,

@@ -9,10 +9,10 @@ public class WeatherResponseDTO
     public string Timezone { get; set; } = string.Empty;
     public string Timezone_abbreviation { get; set; } = string.Empty;
     public double Elevation { get; set; }
-    public CurrentWeatherUnits Current_weather_units { get; set; } = new();
-    public CurrentWeather Current_weather { get; set; } = new();
+    public CurrentWeatherUnitsDto Current_weather_units { get; set; } = new();
+    public CurrentWeatherDto Current_weather { get; set; } = new();
 }
-public class CurrentWeatherUnits
+public class CurrentWeatherUnitsDto
 {
     public string Time { get; set; } = string.Empty;
     public string Interval { get; set; } = string.Empty;
@@ -23,7 +23,7 @@ public class CurrentWeatherUnits
     public string Weathercode { get; set; } = string.Empty;
 }
 
-public class CurrentWeather
+public class CurrentWeatherDto
 {
     public string Time { get; set; } = string.Empty;
     public int Interval { get; set; }
