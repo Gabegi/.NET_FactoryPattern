@@ -1,3 +1,5 @@
 # .NET_FactoryPattern
-- Factory Pattern
+- Dependency injection
 - Refactoring with factory pattern 
+
+
