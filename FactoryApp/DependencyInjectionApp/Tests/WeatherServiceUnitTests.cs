@@ -38,10 +38,7 @@ public class WeatherServiceTests
         var longitude = 13.41;
         var expectedWeather = new Weather
         {
-            Temperature = 20.5,
-            Humidity = 65.0,
-            WindSpeed = 10.2,
-            Description = "Clear sky"
+            Current_weather
         };
 
         var mockResponse = new

@@ -1,0 +1,6 @@
+@KeyedDependencyInjectionApp_HostAddress = http://localhost:5087
+
+GET {{KeyedDependencyInjectionApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
