@@ -1,6 +1,0 @@
-@KeyedDependencyInjectionApp_HostAddress = http://localhost:5136
-
-GET {{KeyedDependencyInjectionApp_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
