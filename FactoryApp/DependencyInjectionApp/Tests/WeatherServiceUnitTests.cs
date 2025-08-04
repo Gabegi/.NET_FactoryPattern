@@ -1,14 +1,17 @@
 ﻿using System.Net;
 using System.Text.Json;
 using DependencyInjectionApp.Domain.Entities;
+using DependencyInjectionApp.Infrastructure;
+using DependencyInjectionApp.Infrastructure.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
-using WeatherApp.Infrastructure;
 using Xunit;
 
 namespace DependencyInjectionApp.Tests.Infrastructure.Services;
 
-public class WeatherServiceTests
+public class WeatherServiceTests : IDisposable
 {
     private readonly Mock<IHttpClientFactory> _mockHttpClientFactory;
     private readonly Mock<ILogger<OpenMeteoService>> _mockLogger;
@@ -38,17 +41,33 @@ public class WeatherServiceTests
         var longitude = 13.41;
         var expectedWeather = new Weather
         {
-            Current_weather
+            Latitude = latitude,
+            Longitude = longitude,
+            Current_weather = new CurrentWeather
+            {
+                Temperature = 20.5,
+                Windspeed = 10.2,
+                Weathercode = 0,
+                Time = "2024-01-15T10:30:00",
+                Interval = 900,
+                Winddirection = 180,
+                Is_day = 1
+            }
         };
 
         var mockResponse = new
         {
+            latitude = latitude,
+            longitude = longitude,
             current_weather = new
             {
                 temperature = 20.5,
-                relative_humidity_2m = 65.0,
-                wind_speed_10m = 10.2,
-                weather_code = 0
+                windspeed = 10.2,
+                weathercode = 0,
+                time = "2024-01-15T10:30:00",
+                interval = 900,
+                winddirection = 180,
+                is_day = 1
             }
         };
 
@@ -76,10 +95,11 @@ public class WeatherServiceTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(expectedWeather.Temperature, result.Temperature);
-        Assert.Equal(expectedWeather.Humidity, result.Humidity);
-        Assert.Equal(expectedWeather.WindSpeed, result.WindSpeed);
-        Assert.Equal(expectedWeather.Description, result.Description);
+        Assert.Equal(expectedWeather.Latitude, result.Latitude);
+        Assert.Equal(expectedWeather.Longitude, result.Longitude);
+        Assert.Equal(expectedWeather.Current_weather.Temperature, result.Current_weather.Temperature);
+        Assert.Equal(expectedWeather.Current_weather.Windspeed, result.Current_weather.Windspeed);
+        Assert.Equal(expectedWeather.Current_weather.Weathercode, result.Current_weather.Weathercode);
     }
 
     [Fact]
@@ -97,7 +117,7 @@ public class WeatherServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ThrowsAsync(new HttpRequestException("Network error"));
 
-        var weatherService = new OpenMeteoWeatherService(
+        var weatherService = new OpenMeteoService(
             _mockHttpClientFactory.Object,
             _mockLogger.Object,
             _mockConfiguration.Object);
@@ -130,7 +150,7 @@ public class WeatherServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpResponse);
 
-        var weatherService = new OpenMeteoWeatherService(
+        var weatherService = new OpenMeteoService(
             _mockHttpClientFactory.Object,
             _mockLogger.Object,
             _mockConfiguration.Object);
@@ -151,7 +171,7 @@ public class WeatherServiceTests
     [InlineData(45, "Foggy")]
     [InlineData(48, "Foggy")]
     [InlineData(99, "Unknown")]
-    public async Task GetCurrentWeatherAsync_DifferentWeatherCodes_ReturnsCorrectDescription(
+    public async Task GetCurrentWeatherAsync_DifferentWeatherCodes_ReturnsCorrectWeatherCode(
         int weatherCode,
         string expectedDescription)
     {
@@ -161,12 +181,17 @@ public class WeatherServiceTests
 
         var mockResponse = new
         {
+            latitude = latitude,
+            longitude = longitude,
             current_weather = new
             {
                 temperature = 20.0,
-                relative_humidity_2m = 60.0,
-                wind_speed_10m = 5.0,
-                weather_code = weatherCode
+                windspeed = 5.0,
+                weathercode = weatherCode,
+                time = "2024-01-15T10:30:00",
+                interval = 900,
+                winddirection = 180,
+                is_day = 1
             }
         };
 
@@ -184,7 +209,7 @@ public class WeatherServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpResponse);
 
-        var weatherService = new OpenMeteoWeatherService(
+        var weatherService = new OpenMeteoService(
             _mockHttpClientFactory.Object,
             _mockLogger.Object,
             _mockConfiguration.Object);
@@ -194,7 +219,7 @@ public class WeatherServiceTests
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(expectedDescription, result.Description);
+        Assert.Equal(weatherCode, result.Current_weather.Weathercode);
     }
 
     [Fact]
@@ -207,12 +232,17 @@ public class WeatherServiceTests
 
         var mockResponse = new
         {
+            latitude = latitude,
+            longitude = longitude,
             current_weather = new
             {
                 temperature = 20.0,
-                relative_humidity_2m = 60.0,
-                wind_speed_10m = 5.0,
-                weather_code = 0
+                windspeed = 5.0,
+                weathercode = 0,
+                time = "2024-01-15T10:30:00",
+                interval = 900,
+                winddirection = 180,
+                is_day = 1
             }
         };
 
@@ -232,7 +262,7 @@ public class WeatherServiceTests
             .Callback<HttpRequestMessage, CancellationToken>((request, _) => capturedRequest = request)
             .ReturnsAsync(httpResponse);
 
-        var weatherService = new OpenMeteoWeatherService(
+        var weatherService = new OpenMeteoService(
             _mockHttpClientFactory.Object,
             _mockLogger.Object,
             _mockConfiguration.Object);
@@ -255,12 +285,17 @@ public class WeatherServiceTests
 
         var mockResponse = new
         {
+            latitude = latitude,
+            longitude = longitude,
             current_weather = new
             {
                 temperature = 20.0,
-                relative_humidity_2m = 60.0,
-                wind_speed_10m = 5.0,
-                weather_code = 0
+                windspeed = 5.0,
+                weathercode = 0,
+                time = "2024-01-15T10:30:00",
+                interval = 900,
+                winddirection = 180,
+                is_day = 1
             }
         };
 
@@ -278,7 +313,7 @@ public class WeatherServiceTests
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(httpResponse);
 
-        var weatherService = new OpenMeteoWeatherService(
+        var weatherService = new OpenMeteoService(
             _mockHttpClientFactory.Object,
             _mockLogger.Object,
             _mockConfiguration.Object);
@@ -307,5 +342,3 @@ public class WeatherServiceTests
         _httpClient?.Dispose();
     }
 }
-
->
