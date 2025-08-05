@@ -1,4 +1,3 @@
-using KeyedDependencyInjectionApp.Domain.Entities;
 using KeyedDependencyInjectionApp.Infrastructure.Interfaces;
 using KeyedDependencyInjectionApp.Presentation.Controllers.DTOs;
 
