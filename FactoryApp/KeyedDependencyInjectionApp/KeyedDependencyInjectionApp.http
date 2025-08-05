@@ -1,6 +1,22 @@
-@KeyedDependencyInjectionApp_HostAddress = http://localhost:5087
+### Test Keyed Dependency Injection Weather API
 
-GET {{KeyedDependencyInjectionApp_HostAddress}}/weatherforecast/
-Accept: application/json
+### Get weather using default service (openmeteo)
+GET https://localhost:7001/api/weather?lat=51.5&lon=-0.1
 
-###
+### Get weather using mock service
+GET https://localhost:7001/api/weather?lat=51.5&lon=-0.1&service=mock
+
+### Get weather using openmeteo service explicitly
+GET https://localhost:7001/api/weather?lat=51.5&lon=-0.1&service=openmeteo
+
+### Get weather using mock endpoint
+GET https://localhost:7001/api/weather/mock?lat=51.5&lon=-0.1
+
+### Get weather using openmeteo endpoint
+GET https://localhost:7001/api/weather/openmeteo?lat=51.5&lon=-0.1
+
+### Test with different coordinates
+GET https://localhost:7001/api/weather?lat=40.7128&lon=-74.0060&service=mock
+
+### Test with invalid service
+GET https://localhost:7001/api/weather?lat=51.5&lon=-0.1&service=invalid
