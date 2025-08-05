@@ -6,11 +6,15 @@ namespace KeyedDependencyInjectionApp.Application.UseCases;
 
 public class GetCurrentWeatherUseCase
 {
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IWeatherService _mockService;
+    private readonly IWeatherService _openMeteoService;
 
-    public GetCurrentWeatherUseCase(IServiceProvider serviceProvider)
+    public GetCurrentWeatherUseCase(
+        [FromKeyedServices("mock")] IWeatherService mockService,
+        [FromKeyedServices("openmeteo")] IWeatherService openMeteoService)
     {
-        _serviceProvider = serviceProvider;
+        _mockService = mockService;
+        _openMeteoService = openMeteoService;
     }
 
     public async Task<WeatherResponseDTO?> ExecuteAsync(double latitude, double longitude, string serviceKey = "openmeteo")
@@ -18,13 +22,18 @@ public class GetCurrentWeatherUseCase
         // Application logic can be added here (validation, business rules, etc.)
         if (latitude < -90 || latitude > 90)
             throw new ArgumentException("Latitude must be between -90 and 90 degrees");
-        
+
         if (longitude < -180 || longitude > 180)
             throw new ArgumentException("Longitude must be between -180 and 180 degrees");
 
-        // Keyed dependency injection - get the service by key
-        var weatherService = _serviceProvider.GetRequiredKeyedService<IWeatherService>(serviceKey);
-        
+        // Keyed dependency injection - select service by key
+        var weatherService = serviceKey switch
+        {
+            "mock" => _mockService,
+            "openmeteo" => _openMeteoService,
+            _ => throw new ArgumentException($"Unknown service key: {serviceKey}")
+        };
+
         var weather = await weatherService.GetCurrentWeatherAsync(latitude, longitude);
         if (weather == null) return null;
 
@@ -59,4 +68,4 @@ public class GetCurrentWeatherUseCase
             }
         };
     }
-} 
+}
