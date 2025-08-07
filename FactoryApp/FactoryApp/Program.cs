@@ -1,14 +1,38 @@
+using FactoryApp.Application.UseCases;
+using FactoryApp.Infrastructure;
+using FactoryApp.Infrastructure.Factories;
+using FactoryApp.Infrastructure.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Register services
 builder.Services.AddControllers();
-
-// Add Swagger (optional but recommended for API testing)
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// If you want to inject IWeatherService, you can register it like this:
-// builder.Services.AddHttpClient<IWeatherService, OpenMeteoService>();
+// Register HttpClient with configuration from appsettings
+builder.Services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var timeoutSeconds = configuration.GetValue<int>("WeatherApi:TimeoutSeconds", 30);
+    var userAgent = configuration.GetValue<string>("WeatherApi:UserAgent", "WeatherApp/1.0");
+
+    client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+    client.DefaultRequestHeaders.Add("User-Agent", userAgent);
+});
+
+// Register weather services
+builder.Services.AddScoped<MockWeatherService>();
+builder.Services.AddScoped<OpenMeteoService>();
+
+// Register factory
+builder.Services.AddScoped<IWeatherServiceFactory, WeatherServiceFactory>();
+
+// Register use case
+builder.Services.AddScoped<GetCurrentWeatherUseCase>();
+
+// Register logging
+builder.Services.AddLogging();
 
 var app = builder.Build();
 
@@ -20,7 +44,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.MapControllers();
 
 app.Run();

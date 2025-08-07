@@ -9,9 +9,9 @@ public class OpenMeteoService : IWeatherService
     private readonly HttpClient _httpClient;
     private readonly ILogger<OpenMeteoService> _logger;
 
-    public OpenMeteoService(HttpClient httpClient, ILogger<OpenMeteoService> logger)
+    public OpenMeteoService(IHttpClientFactory httpClientFactory, ILogger<OpenMeteoService> logger)
     {
-        _httpClient = httpClient;
+        _httpClient = httpClientFactory.CreateClient("WeatherApi");
         _logger = logger;
     }
 
