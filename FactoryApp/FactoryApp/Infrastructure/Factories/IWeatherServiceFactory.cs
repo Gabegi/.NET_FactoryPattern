@@ -1,9 +1,8 @@
-﻿using WeatherApp.Application.Interfaces;
+﻿using FactoryApp.Infrastructure.Interfaces;
 
-namespace FactoryApp.Infrastructure.Factories
+namespace FactoryApp.Infrastructure.Factories;
+
+public interface IWeatherServiceFactory
 {
-    public interface IWeatherServiceFactory
-    {
-        IWeatherService Create();
-    }
+    IWeatherService CreateWeatherService(string serviceType);
 }
