@@ -1,17 +1,34 @@
-﻿using WeatherApp.Application.Interfaces;
+﻿using FactoryApp.Infrastructure.Interfaces;
 
 namespace WeatherApp.Infrastructure;
 
-public static class WeatherServiceFactory
+// Interface for the factory
+public interface IWeatherServiceFactory
 {
-    public static IWeatherService Create(string provider)
+    IWeatherService Create(string provider);
+}
+
+// Best Practice Implementation
+public class WeatherServiceFactory : IWeatherServiceFactory
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ILoggerFactory _loggerFactory;
+
+    public WeatherServiceFactory(IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory)
     {
-        var httpClient = new HttpClient();
+        _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+        _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+    }
+
+    public IWeatherService Create(string provider)
+    {
+        if (string.IsNullOrWhiteSpace(provider))
+            throw new ArgumentException("Provider cannot be null or empty.", nameof(provider));
 
         return provider.ToLower() switch
         {
-            "openmeteo" => new OpenMeteoService(httpClient),
+            "openmeteo" => CreateOpenMeteoService(),
+            "weatherapi" => CreateWeatherApiService(), // Example of adding another provider
             _ => throw new NotSupportedException($"Weather provider '{provider}' is not supported.")
         };
     }
-}
