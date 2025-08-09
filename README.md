@@ -1,6 +1,6 @@
 # .NET_FactoryPattern
 - Dependency injection
-- Keyed DI
+- Keyed dependency injection 
 - Refactoring with factory pattern 
 
 
