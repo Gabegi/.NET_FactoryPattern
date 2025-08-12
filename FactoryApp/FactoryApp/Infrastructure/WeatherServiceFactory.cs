@@ -1,34 +1,50 @@
 ﻿using FactoryApp.Infrastructure.Interfaces;
 
-namespace WeatherApp.Infrastructure;
-
-// Interface for the factory
-public interface IWeatherServiceFactory
+namespace WeatherApp.Infrastructure
 {
-    IWeatherService Create(string provider);
-}
-
-// Best Practice Implementation
-public class WeatherServiceFactory : IWeatherServiceFactory
-{
-    private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ILoggerFactory _loggerFactory;
-
-    public WeatherServiceFactory(IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory)
+    // Interface for the factory
+    public interface IWeatherServiceFactory
     {
-        _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-        _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+        IWeatherService Create(string provider);
     }
 
-    public IWeatherService Create(string provider)
+    // Best Practice Implementation
+    public class WeatherServiceFactory : IWeatherServiceFactory
     {
-        if (string.IsNullOrWhiteSpace(provider))
-            throw new ArgumentException("Provider cannot be null or empty.", nameof(provider));
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ILoggerFactory _loggerFactory;
 
-        return provider.ToLower() switch
+        public WeatherServiceFactory(IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory)
         {
-            "openmeteo" => CreateOpenMeteoService(),
-            "weatherapi" => CreateWeatherApiService(), // Example of adding another provider
-            _ => throw new NotSupportedException($"Weather provider '{provider}' is not supported.")
-        };
+            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
+            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+        }
+
+        public IWeatherService Create(string provider)
+        {
+            if (string.IsNullOrWhiteSpace(provider))
+                throw new ArgumentException("Provider cannot be null or empty.", nameof(provider));
+
+            return provider.ToLower() switch
+            {
+                "openmeteo" => CreateOpenMeteoService(),
+                "weatherapi" => CreateWeatherApiService(),
+                _ => throw new NotSupportedException($"Weather provider '{provider}' is not supported.")
+            };
+        }
+
+        private OpenMeteoService CreateOpenMeteoService()
+        {
+            var httpClient = _httpClientFactory.CreateClient("OpenMeteo");
+            var logger = _loggerFactory.CreateLogger<OpenMeteoService>();
+            return new OpenMeteoService(httpClient, logger);
+        }
+
+        private WeatherApiService CreateWeatherApiService()
+        {
+            var httpClient = _httpClientFactory.CreateClient("WeatherAPI");
+            var logger = _loggerFactory.CreateLogger<WeatherApiService>();
+            return new WeatherApiService(httpClient, logger);
+        }
     }
+}
