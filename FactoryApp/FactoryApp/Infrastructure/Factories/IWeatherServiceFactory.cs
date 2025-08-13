@@ -4,5 +4,5 @@ namespace FactoryApp.Infrastructure.Factories;
 
 public interface IWeatherServiceFactory
 {
-    IWeatherService CreateWeatherService(string serviceType);
+    IWeatherService CreateWeatherService(WeatherServiceCreationRequest request);
 }
