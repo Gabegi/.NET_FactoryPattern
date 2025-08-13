@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using FactoryApp.Application.UseCases;
 using FactoryApp.Presentation.DTOs;
+using FactoryApp.Infrastructure.Factories;
 
 namespace FactoryApp.Presentation.Controllers;
 

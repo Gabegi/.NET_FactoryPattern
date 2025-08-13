@@ -2,6 +2,7 @@ using FactoryApp.Application.UseCases;
 using FactoryApp.Infrastructure;
 using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
+using FactoryApp.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,10 @@ builder.Services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
 // Register weather services
 builder.Services.AddScoped<MockWeatherService>();
 builder.Services.AddScoped<OpenMeteoService>();
+
+// Register cache and retry services
+builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
+builder.Services.AddScoped<IRetryPolicyService, SimpleRetryPolicyService>();
 
 // Register factory
 builder.Services.AddScoped<IWeatherServiceFactory, WeatherServiceFactory>();
