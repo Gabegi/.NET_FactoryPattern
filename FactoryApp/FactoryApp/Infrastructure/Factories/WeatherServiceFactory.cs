@@ -2,6 +2,7 @@ using FactoryApp.Infrastructure.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using FactoryApp.Infrastructure.Services;
 
 namespace FactoryApp.Infrastructure.Factories;
 
