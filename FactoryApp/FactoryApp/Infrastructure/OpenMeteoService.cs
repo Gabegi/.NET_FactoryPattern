@@ -47,4 +47,17 @@ public class OpenMeteoService : IWeatherService
             return null;
         }
     }
+
+    public bool SupportsFeature(string feature)
+    {
+        return feature.ToLowerInvariant() switch
+        {
+            "current_weather" => true,
+            "forecast" => true,
+            "historical" => true,
+            "hourly" => true,
+            "daily" => true,
+            _ => false
+        };
+    }
 } 

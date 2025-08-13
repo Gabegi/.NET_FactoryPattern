@@ -41,4 +41,15 @@ public class MockWeatherService : IWeatherService
             }
         };
     }
+
+    public bool SupportsFeature(string feature)
+    {
+        return feature.ToLowerInvariant() switch
+        {
+            "current_weather" => true,
+            "forecast" => false,
+            "historical" => false,
+            _ => false
+        };
+    }
 } 
