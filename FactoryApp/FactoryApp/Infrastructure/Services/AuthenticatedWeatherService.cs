@@ -1,6 +1,5 @@
 using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Interfaces;
-using Microsoft.Extensions.Configuration;
 
 namespace FactoryApp.Infrastructure.Services;
 
