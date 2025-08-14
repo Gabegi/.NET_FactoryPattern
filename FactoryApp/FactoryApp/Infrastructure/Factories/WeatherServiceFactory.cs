@@ -1,23 +1,7 @@
 using FactoryApp.Infrastructure.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using FactoryApp.Infrastructure.Services;
 
 namespace FactoryApp.Infrastructure.Factories;
-
-// ✅ WITH FACTORY PATTERN - Complex Logic Centralized and Organized
-public class WeatherServiceCreationRequest
-{
-    public string Environment { get; set; } = string.Empty;
-    public string Region { get; set; } = string.Empty;
-    public bool RequiresAuthentication { get; set; }
-    public bool EnableCaching { get; set; } = true;
-    public bool EnableRetryPolicy { get; set; } = true;
-    public int? CustomTimeoutSeconds { get; set; }
-    public string? CustomUserAgent { get; set; }
-    public List<string> RequiredFeatures { get; set; } = new();
-}
 
 public class WeatherServiceFactory : IWeatherServiceFactory
 {
