@@ -1,4 +1,5 @@
-﻿using FactoryApp.Infrastructure.Interfaces;
+﻿using FactoryApp.Infrastructure;
+using FactoryApp.Infrastructure.Interfaces;
 
 namespace WeatherApp.Infrastructure
 {
