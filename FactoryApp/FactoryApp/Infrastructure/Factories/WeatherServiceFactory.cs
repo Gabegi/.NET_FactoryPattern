@@ -49,65 +49,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
         return decoratedService;
     }
 
-    // STEP 1: Complex conditional base service creation
-    private IWeatherService CreateBaseService(WeatherServiceCreationRequest request)
-    {
-        // Mock service for development/testing
-        if (IsNonProductionEnvironment(request.Environment))
-        {
-            _logger.LogDebug("Using mock weather service for non-production environment");
-            return _serviceProvider.GetRequiredService<MockWeatherService>();
-        }
-
-        // Production services - complex regional logic
-        return request.Region.ToLowerInvariant() switch
-        {
-            "europe" or "eu" => CreateEuropeanService(request),
-            "northamerica" or "na" => CreateNorthAmericanService(request),
-            "asia" => CreateAsianService(request),
-            "global" => CreateGlobalService(request),
-            _ => CreateDefaultService(request)
-        };
-    }
-
-    private bool IsNonProductionEnvironment(string environment)
-    {
-        return environment.ToLowerInvariant() switch
-        {
-            "development" or "dev" or "test" or "staging" => true,
-            _ => false
-        };
-    }
-
-    private IWeatherService CreateEuropeanService(WeatherServiceCreationRequest request)
-    {
-        _logger.LogDebug("Creating European weather service");
-        return _serviceProvider.GetRequiredService<OpenMeteoService>();
-    }
-
-    private IWeatherService CreateNorthAmericanService(WeatherServiceCreationRequest request)
-    {
-        _logger.LogDebug("Creating North American weather service");
-        return _serviceProvider.GetRequiredService<OpenMeteoService>();
-    }
-
-    private IWeatherService CreateAsianService(WeatherServiceCreationRequest request)
-    {
-        _logger.LogDebug("Creating Asian weather service");
-        return _serviceProvider.GetRequiredService<OpenMeteoService>();
-    }
-
-    private IWeatherService CreateGlobalService(WeatherServiceCreationRequest request)
-    {
-        _logger.LogDebug("Creating global weather service");
-        return _serviceProvider.GetRequiredService<OpenMeteoService>();
-    }
-
-    private IWeatherService CreateDefaultService(WeatherServiceCreationRequest request)
-    {
-        _logger.LogDebug("Creating default weather service");
-        return _serviceProvider.GetRequiredService<OpenMeteoService>();
-    }
+   
 
     // STEP 2: Apply conditional decorators
     private IWeatherService ApplyConditionalDecorators(IWeatherService baseService, WeatherServiceCreationRequest request)
