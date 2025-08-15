@@ -1,0 +1,45 @@
+### Basic Weather Service (Backward Compatible)
+GET https://localhost:7002/api/weather?lat=51.5&lon=-0.1&service=openmeteo
+
+### Advanced Weather Service with Factory Pattern
+POST https://localhost:7002/api/weather/advanced?lat=51.5&lon=-0.1
+Content-Type: application/json
+
+{
+  "environment": "production",
+  "region": "europe",
+  "requiresAuthentication": false,
+  "enableCaching": true,
+  "enableRetryPolicy": true,
+  "customTimeoutSeconds": 30,
+  "customUserAgent": "MyWeatherApp/2.0",
+  "requiredFeatures": ["current_weather", "forecast"]
+}
+
+### Development Environment with Mock Service
+POST https://localhost:7002/api/weather/advanced?lat=51.5&lon=-0.1
+Content-Type: application/json
+
+{
+  "environment": "development",
+  "region": "global",
+  "requiresAuthentication": false,
+  "enableCaching": false,
+  "enableRetryPolicy": false,
+  "requiredFeatures": ["current_weather"]
+}
+
+### Production with Authentication and Custom Settings
+POST https://localhost:7002/api/weather/advanced?lat=51.5&lon=-0.1
+Content-Type: application/json
+
+{
+  "environment": "production",
+  "region": "northamerica",
+  "requiresAuthentication": true,
+  "enableCaching": true,
+  "enableRetryPolicy": true,
+  "customTimeoutSeconds": 60,
+  "customUserAgent": "EnterpriseWeatherApp/1.0",
+  "requiredFeatures": ["current_weather", "forecast", "historical"]
+}
