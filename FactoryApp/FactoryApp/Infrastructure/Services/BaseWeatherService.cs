@@ -3,28 +3,23 @@ using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Services
 {
-    public class BaseWeatherService
+    public class BaseWeatherService : IBaseWeatherService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly IConfiguration _configuration;
         private readonly ILogger<WeatherServiceFactory> _logger;
-        private readonly ICacheService _cacheService;
-        private readonly IRetryPolicyService _retryService;
 
         public BaseWeatherService(
         IServiceProvider serviceProvider,
-        IConfiguration configuration,
-        ILogger<WeatherServiceFactory> logger,
-        ICacheService cacheService,
-        IRetryPolicyService retryService)
+        ILogger<WeatherServiceFactory> logger)
         {
             _serviceProvider = serviceProvider;
-            _configuration = configuration;
             _logger = logger;
-            _cacheService = cacheService;
-            _retryService = retryService;
         }
         // STEP 1: Complex conditional base service creation
+        IWeatherService IBaseWeatherService.CreateBaseService(WeatherServiceCreationRequest request)
+        {
+            return CreateBaseService(request);
+        }
         internal IWeatherService CreateBaseService(WeatherServiceCreationRequest request)
         {
             // Mock service for development/testing
@@ -83,5 +78,7 @@ namespace FactoryApp.Infrastructure.Services
             _logger.LogDebug("Creating default weather service");
             return _serviceProvider.GetRequiredService<OpenMeteoService>();
         }
+
+
     }
 }
