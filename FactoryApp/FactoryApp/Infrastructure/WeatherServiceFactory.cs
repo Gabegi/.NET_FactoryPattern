@@ -1,5 +1,6 @@
 ﻿using FactoryApp.Infrastructure;
 using FactoryApp.Infrastructure.Interfaces;
+using FactoryApp.Infrastructure.Services;
 
 namespace WeatherApp.Infrastructure
 {
@@ -41,11 +42,11 @@ namespace WeatherApp.Infrastructure
             return new OpenMeteoService(httpClient, logger);
         }
 
-        private WeatherApiService CreateWeatherApiService()
+        private BaseWeatherService CreateWeatherApiService()
         {
             var httpClient = _httpClientFactory.CreateClient("WeatherAPI");
-            var logger = _loggerFactory.CreateLogger<WeatherApiService>();
-            return new WeatherApiService(httpClient, logger);
+            var logger = _loggerFactory.CreateLogger<BaseWeatherService>();
+            return new BaseWeatherService(httpClient, logger);
         }
     }
 }
