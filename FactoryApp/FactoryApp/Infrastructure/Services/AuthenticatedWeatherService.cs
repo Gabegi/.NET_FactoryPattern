@@ -6,12 +6,10 @@ namespace FactoryApp.Infrastructure.Services;
 public class AuthenticatedWeatherService : IWeatherService
 {
     private readonly IWeatherService _weatherService;
-    private readonly IConfiguration _configuration;
 
-    public AuthenticatedWeatherService(IWeatherService weatherService, IConfiguration configuration)
+    public AuthenticatedWeatherService(IWeatherService weatherService)
     {
         _weatherService = weatherService;
-        _configuration = configuration;
     }
 
     public async Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude)
