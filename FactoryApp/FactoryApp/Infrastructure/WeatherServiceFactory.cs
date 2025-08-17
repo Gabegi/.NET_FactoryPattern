@@ -18,8 +18,8 @@ namespace WeatherApp.Infrastructure
 
         public WeatherServiceFactory(IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory)
         {
-            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
-            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
+            _httpClientFactory = httpClientFactory;
+            _loggerFactory = loggerFactory;
         }
 
         public IWeatherService Create(string provider)
@@ -35,6 +35,8 @@ namespace WeatherApp.Infrastructure
             };
         }
 
+
+        // TO DO: have a separate client
         private OpenMeteoService CreateOpenMeteoService()
         {
             var httpClient = _httpClientFactory.CreateClient("OpenMeteo");
