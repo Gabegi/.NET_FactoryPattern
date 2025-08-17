@@ -1,36 +1,25 @@
 using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Factories;
+using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Application.UseCases;
 
 public class GetCurrentWeatherUseCase
 {
-    private readonly IWeatherServiceFactory _weatherServiceFactory;
+    private readonly IWeatherService _weatherService;
 
-    public GetCurrentWeatherUseCase(IWeatherServiceFactory weatherServiceFactory)
+    public GetCurrentWeatherUseCase(IWeatherService weatherService)
     {
-        _weatherServiceFactory = weatherServiceFactory;
+        _weatherService = weatherService;
     }
 
+    // TO DO: Add mapping + validating + other logic here
+    // TO DO: Use WeatherRequestDTO
     public async Task<Weather?> ExecuteAsync(string serviceName = "openmeteo")
     {
-        //// Create a simple request for backward compatibility
-        //var request = new WeatherServiceCreationRequest
-        //{
-        //    Environment = "production",
-        //    Region = "global",
-        //    EnableCaching = true,
-        //    EnableRetryPolicy = true,
-        //    RequiredFeatures = new List<string> { "current_weather" }
-        //};
+        return await _weatherService.GetCurrentWeatherAsync(serviceName);
 
-        var weatherService = _weatherServiceFactory.CreateWeatherService(serviceName);
-        return await weatherService.GetCurrentWeatherAsync();
-    }
-
-    public async Task<Weather?> ExecuteAsync(double latitude, double longitude, WeatherServiceCreationRequest request)
-    {
-        var weatherService = _weatherServiceFactory.CreateWeatherService(request);
-        return await weatherService.GetCurrentWeatherAsync(latitude, longitude);
+        // TO DO: Mapping
+        //return await weatherService.GetCurrentWeatherAsync();
     }
 } 

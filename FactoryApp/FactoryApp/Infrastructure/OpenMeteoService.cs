@@ -1,6 +1,7 @@
-using System.Text.Json;
 using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Interfaces;
+using System.Text.Json;
+using static FactoryApp.Domain.Entities.WeatherServiceTypes;
 
 namespace FactoryApp.Infrastructure;
 
@@ -8,18 +9,21 @@ public class OpenMeteoService : IWeatherService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<OpenMeteoService> _logger;
+    private readonly WeatherServiceType _serviceType;
 
-    public OpenMeteoService(IHttpClientFactory httpClientFactory, ILogger<OpenMeteoService> logger)
+
+    public OpenMeteoService(IHttpClientFactory httpClientFactory, WeatherServiceType serviceType, ILogger<OpenMeteoService> logger)
     {
         _httpClient = httpClientFactory.CreateClient("WeatherApi");
+        _serviceType = serviceType;
         _logger = logger;
     }
 
-    public async Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude)
+    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequest request)
     {
         try
         {
-            var url = $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current_weather=true";
+            var service = GetConfigForService(_serviceType);
             
             _logger.LogInformation("Fetching weather data from Open-Meteo API for coordinates: {Latitude}, {Longitude}", latitude, longitude);
             

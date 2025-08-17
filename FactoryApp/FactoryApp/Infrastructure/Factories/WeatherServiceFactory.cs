@@ -1,6 +1,6 @@
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Infrastructure.Services;
-using System.Net.Http;
+using static FactoryApp.Domain.Entities.WeatherServiceTypes;
 
 namespace FactoryApp.Infrastructure.Factories;
 
