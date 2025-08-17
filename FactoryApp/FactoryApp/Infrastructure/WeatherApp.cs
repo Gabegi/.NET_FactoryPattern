@@ -11,12 +11,12 @@ namespace WeatherApp.Infrastructure
     }
 
     // Best Practice Implementation
-    public class WeatherServiceFactory : IWeatherServiceFactory
+    public class WeatherApp : IWeatherServiceFactory
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILoggerFactory _loggerFactory;
 
-        public WeatherServiceFactory(IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory)
+        public WeatherApp(IHttpClientFactory httpClientFactory, ILoggerFactory loggerFactory)
         {
             _httpClientFactory = httpClientFactory;
             _loggerFactory = loggerFactory;
