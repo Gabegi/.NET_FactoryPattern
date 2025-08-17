@@ -1,5 +1,6 @@
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Infrastructure.Services;
+using System.Net.Http;
 
 namespace FactoryApp.Infrastructure.Factories;
 
@@ -28,30 +29,22 @@ public class WeatherServiceFactory : IWeatherServiceFactory
         _baseService = baseService;
     }
 
-    // ✅ CENTRALISED COMPLEX CREATION LOGIC
-    public IWeatherService CreateWeatherService(string serviceName)
+    // ✅ steps
+    // create service based on env and region
+    // Apply conditional decorators based on requirements
+
+    public IWeatherService CreateBaseService(string serviceName)
     {
-        _logger.LogInformation($"Creating weather service for service: {serviceName}");
+        if (!Enum.TryParse<WeatherServiceType>(serviceName, out var serviceType))
+        {
+            throw new ArgumentException($"Invalid service name: {serviceName}. Must be one of: {string.Join(", ", Enum.GetNames<WeatherServiceType>())}");
+        }
 
-        // Step 1: Determine base service type based on environment and region
-        var baseService = _baseService.CreateBaseService(serviceName);
-
-        // Step 2: Apply conditional decorators based on requirements
-        var decoratedService = ApplyConditionalDecorators(baseService, request);
-
-        // Step 3: Configure service with environment-specific settings
-        ConfigureServiceSettings(decoratedService, request);
-
-        // Step 4: Validate service meets all requirements
-        ValidateServiceRequirements(decoratedService, request);
-
-        _logger.LogInformation("Successfully created weather service: {ServiceType}", 
-            decoratedService.GetType().Name);
-
-        return decoratedService;
+        var httpClient = _httpClientFactory.CreateClient("WeatherService");
+        return new UnifiedWeatherService(httpClient, serviceType, _logger);
     }
 
-   
+
 
     // STEP 2: Apply conditional decorators
     private IWeatherService ApplyConditionalDecorators(IWeatherService baseService, WeatherServiceCreationRequest request)
