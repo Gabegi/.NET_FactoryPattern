@@ -16,11 +16,11 @@ namespace FactoryApp.Infrastructure.Services
             _logger = logger;
         }
         // STEP 1: Complex conditional base service creation
-        IWeatherService IBaseWeatherService.CreateBaseService(WeatherServiceCreationRequest request)
+        IWeatherService IBaseWeatherService.CreateBaseService(string serviceName)
         {
-            return CreateBaseService(request);
+            return CreateBaseService(serviceName);
         }
-        internal IWeatherService CreateBaseService(WeatherServiceCreationRequest request)
+        internal IWeatherService CreateBaseService(string serviceName)
         {
             // Mock service for development/testing
             if (IsNonProductionEnvironment(request.Environment))
