@@ -10,29 +10,31 @@ public class WeatherServiceFactory : IWeatherServiceFactory
     private readonly ILogger<WeatherServiceFactory> _logger;
     private readonly ICacheService _cacheService;
     private readonly IRetryPolicyService _retryService;
+    private readonly IBaseWeatherService _baseService;
 
     public WeatherServiceFactory(
         IServiceProvider serviceProvider,
         IConfiguration configuration,
         ILogger<WeatherServiceFactory> logger,
         ICacheService cacheService,
-        IRetryPolicyService retryService)
+        IRetryPolicyService retryService,
+        IBaseWeatherService baseService)
     {
         _serviceProvider = serviceProvider;
         _configuration = configuration;
         _logger = logger;
         _cacheService = cacheService;
         _retryService = retryService;
+        _baseService = baseService;
     }
 
     // ✅ CENTRALISED COMPLEX CREATION LOGIC
-    public IWeatherService CreateWeatherService(WeatherServiceCreationRequest request)
+    public IWeatherService CreateWeatherService(string serviceName)
     {
-        _logger.LogInformation("Creating weather service for Environment: {Environment}, Region: {Region}", 
-            request.Environment, request.Region);
+        _logger.LogInformation($"Creating weather service for service: {serviceName}");
 
         // Step 1: Determine base service type based on environment and region
-        var baseService = CreateBaseService(request);
+        var baseService = _baseService.CreateBaseService(serviceName);
 
         // Step 2: Apply conditional decorators based on requirements
         var decoratedService = ApplyConditionalDecorators(baseService, request);
