@@ -16,14 +16,14 @@ namespace FactoryApp.Infrastructure.Services
             _logger = logger;
         }
         // STEP 1: Complex conditional base service creation
-        IWeatherService IBaseWeatherService.CreateBaseService(string serviceName)
-        {
-            return CreateBaseService(serviceName);
-        }
+        //IWeatherService IBaseWeatherService.CreateBaseService(string serviceName)
+        //{
+        //    return CreateBaseService(serviceName);
+        //}
         internal IWeatherService CreateBaseService(string serviceName)
         {
             // Mock service for development/testing
-            if (IsNonProductionEnvironment(request.Environment))
+            if (IsNonProductionEnvironment(serviceName))
             {
                 _logger.LogDebug("Using mock weather service for non-production environment");
                 return _serviceProvider.GetRequiredService<MockWeatherService>();
@@ -49,13 +49,13 @@ namespace FactoryApp.Infrastructure.Services
             };
         }
 
-        internal IWeatherService CreateEuropeanService(WeatherServiceCreationRequest request)
+        internal IWeatherService CreateTokyoService(WeatherServiceCreationRequest request)
         {
             _logger.LogDebug("Creating European weather service");
             return _serviceProvider.GetRequiredService<OpenMeteoService>();
         }
 
-        internal IWeatherService CreateNorthAmericanService(WeatherServiceCreationRequest request)
+        internal IWeatherService CreateNewYorkService(WeatherServiceCreationRequest request)
         {
             _logger.LogDebug("Creating North American weather service");
             return _serviceProvider.GetRequiredService<OpenMeteoService>();
