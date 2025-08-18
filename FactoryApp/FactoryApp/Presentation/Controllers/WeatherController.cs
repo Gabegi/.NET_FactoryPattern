@@ -2,7 +2,6 @@ using FactoryApp.Application.UseCases;
 using FactoryApp.Domain.Entities;
 using FactoryApp.Presentation.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using FactoryApp.Domain.Entities;
 
 namespace FactoryApp.Presentation.Controllers;
 
@@ -23,13 +22,18 @@ public class WeatherController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromQuery] WeatherServiceType serviceType)
+        [FromQuery] WeatherServiceType serviceType,
+        [FromQuery] string environment,
+        [FromQuery] string user
+        )
     {
         try
         {
             var request = new WeatherRequestDTO
             {
-                ServiceName = serviceType,
+                ServiceName = serviceType.ToString(),
+                Environment = environment,
+                User = user
             };
 
             var response = await _weatherService.GetWeatherAsync(request);

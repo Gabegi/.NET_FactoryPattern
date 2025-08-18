@@ -3,7 +3,7 @@ using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure;
 
-public class MockWeatherService : IWeatherClient
+public class MockWeatherClient : IWeatherClient
 {
     public async Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude)
     {

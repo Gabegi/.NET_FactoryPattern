@@ -17,7 +17,7 @@ public class GetCurrentWeatherService
     // TO DO: Use WeatherRequestDTO
     public async Task<Weather?> GetWeatherAsync(WeatherRequestDTO request)
     {
-        return await _weatherClient.GetCurrentWeatherAsync(WeatherRequestDTO request);
+        return await _weatherClient.GetCurrentWeatherAsync(request);
 
     }
 } 
