@@ -27,7 +27,7 @@ public class WeatherController : ControllerBase
                 ServiceName = serviceType.,
             };
 
-            var response = await _getCurrentWeatherUseCase.ExecuteAsync(request);
+            var response = await _getCurrentWeatherUseCase.GetWeatherAsync(request);
             return Ok(response);
         }
         catch (ArgumentException ex)
