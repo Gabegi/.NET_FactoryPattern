@@ -1,7 +1,6 @@
 ﻿namespace FactoryApp.Domain.Entities
 {
-    public class WeatherServiceTypes
-    {
+
         public enum WeatherServiceType
         {
             [WeatherServiceConfig("https://dev-api.openmeteo.com/v1/forecast", "asia", "dev", "Asia/Tokyo", 30, 35.6762, 139.6503)]
@@ -28,5 +27,5 @@
             [WeatherServiceConfig("https://api.openmeteo.com/v1/forecast", "global", "prod", "", 15)]
             GlobalPrdAdmin
         }
-    }
+    
 }
