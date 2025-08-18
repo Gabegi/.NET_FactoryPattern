@@ -6,18 +6,18 @@ namespace FactoryApp.Application.UseCases;
 
 public class GetCurrentWeatherService
 {
-    private readonly Infrastructure.Interfaces.IWeatherClient _weatherService;
+    private readonly IWeatherClient _weatherClient;
 
-    public GetCurrentWeatherService(IOpen weatherService)
+    public GetCurrentWeatherService(IWeatherClient weatherClient)
     {
-        _weatherService = weatherService;
+        _weatherClient = weatherClient;
     }
 
     // TO DO: Add mapping + validating + other logic here
     // TO DO: Use WeatherRequestDTO
     public async Task<Weather?> GetWeatherAsync(WeatherRequestDTO request)
     {
-        return await _weatherService.GetCurrentWeatherAsync(request);
+        return await _weatherClient.GetCurrentWeatherAsync(WeatherRequestDTO request);
 
     }
 } 

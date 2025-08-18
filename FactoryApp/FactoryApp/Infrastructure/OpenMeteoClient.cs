@@ -1,6 +1,7 @@
 using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
+using FactoryApp.Presentation.DTOs;
 using System.Text.Json;
 using static FactoryApp.Domain.Entities.WeatherServiceTypes;
 
@@ -23,15 +24,13 @@ public class OpenMeteoClient : IWeatherClient
         _logger = logger;
     }
 
-    public async Task<Weather?> GetCurrentWeatherAsync(string serviceName)
+    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO request)
     {
         _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {serviceName}");
 
         try
         {
             var service = _weatherServiceFactory.CreateWeatherService(serviceName)
-
-
 
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();

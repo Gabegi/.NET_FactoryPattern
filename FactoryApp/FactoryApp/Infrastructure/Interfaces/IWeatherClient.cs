@@ -1,9 +1,10 @@
 using FactoryApp.Domain.Entities;
+using FactoryApp.Presentation.DTOs;
 
 namespace FactoryApp.Infrastructure.Interfaces;
 
 public interface IWeatherClient
 {
-    Task<Weather?> GetCurrentWeatherAsync(string serviceName);
+    Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO request);
     bool SupportsFeature(string feature);
 } 
