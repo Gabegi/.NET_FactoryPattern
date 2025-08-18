@@ -31,7 +31,7 @@ builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
 builder.Services.AddScoped<IRetryPolicyService, SimpleRetryPolicyService>();
 
 // Register factory
-builder.Services.AddScoped<IWeatherServiceFactory, WeatherServiceFactory>();
+builder.Services.AddScoped<IWeatherClientFactory, WeatherClientFactory>();
 
 // Register use case
 builder.Services.AddScoped<GetCurrentWeatherService>();

@@ -1,22 +1,22 @@
+using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Infrastructure.Services;
-using static FactoryApp.Domain.Entities.WeatherServiceTypes;
 
 namespace FactoryApp.Infrastructure.Factories;
 
-public class WeatherServiceFactory : IWeatherServiceFactory
+public class WeatherClientFactory : IWeatherClientFactory
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IConfiguration _configuration;
-    private readonly ILogger<WeatherServiceFactory> _logger;
+    private readonly ILogger<WeatherClientFactory> _logger;
     private readonly ICacheService _cacheService;
     private readonly IRetryPolicyService _retryService;
     private readonly IBaseWeatherService _baseService;
 
-    public WeatherServiceFactory(
+    public WeatherClientFactory(
         IServiceProvider serviceProvider,
         IConfiguration configuration,
-        ILogger<WeatherServiceFactory> logger,
+        ILogger<WeatherClientFactory> logger,
         ICacheService cacheService,
         IRetryPolicyService retryService,
         IBaseWeatherService baseService)
@@ -33,7 +33,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
     // create service based on env and region
     // Apply conditional decorators based on requirements
 
-    public IWeatherClient CreateBaseService(string serviceName)
+    public IWeatherClient CreateClient(WeatherClientCreationRequest request)
     {
         if (!Enum.TryParse<WeatherServiceType>(serviceName, out var serviceType))
         {
@@ -47,7 +47,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
 
 
     // STEP 2: Apply conditional decorators
-    private IWeatherClient ApplyConditionalDecorators(IWeatherClient baseService, WeatherServiceCreationRequest request)
+    private IWeatherClient ApplyConditionalDecorators(IWeatherClient baseService, WeatherClientCreationRequest request)
     {
         var service = baseService;
 
@@ -73,7 +73,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
     }
 
     // STEP 3: Configure service settings
-    private void ConfigureServiceSettings(IWeatherClient service, WeatherServiceCreationRequest request)
+    private void ConfigureServiceSettings(IWeatherClient service, WeatherClientCreationRequest request)
     {
         if (request.CustomTimeoutSeconds.HasValue)
         {
@@ -97,7 +97,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
     }
 
     // STEP 4: Validate service requirements
-    private void ValidateServiceRequirements(IWeatherClient service, WeatherServiceCreationRequest request)
+    private void ValidateServiceRequirements(IWeatherClient service, WeatherClientCreationRequest request)
     {
         foreach (var feature in request.RequiredFeatures)
         {

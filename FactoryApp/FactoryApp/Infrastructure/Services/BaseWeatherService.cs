@@ -6,11 +6,11 @@ namespace FactoryApp.Infrastructure.Services
     public class BaseWeatherService : IBaseWeatherService
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger<WeatherServiceFactory> _logger;
+        private readonly ILogger<WeatherClientFactory> _logger;
 
         public BaseWeatherService(
         IServiceProvider serviceProvider,
-        ILogger<WeatherServiceFactory> logger)
+        ILogger<WeatherClientFactory> logger)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;

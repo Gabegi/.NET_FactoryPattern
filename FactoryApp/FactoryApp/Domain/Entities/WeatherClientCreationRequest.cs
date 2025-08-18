@@ -1,7 +1,9 @@
 ﻿namespace FactoryApp.Domain.Entities
 {
-    public class WeatherServiceCreationRequest
+    public class WeatherClientCreationRequest
     {
+        public string ServiceName { get; set; } = string.Empty;
+
         public string Environment { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;
         public bool RequiresAuthentication { get; set; }

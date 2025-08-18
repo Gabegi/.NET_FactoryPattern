@@ -3,20 +3,19 @@ using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Presentation.DTOs;
 using System.Text.Json;
-using static FactoryApp.Domain.Entities.WeatherServiceTypes;
 
 namespace FactoryApp.Infrastructure;
 
 public class OpenMeteoClient : IWeatherClient
 {
     private readonly HttpClient _httpClient;
-    private readonly IWeatherServiceFactory _weatherServiceFactory;
+    private readonly IWeatherClientFactory _weatherServiceFactory;
     private readonly ILogger<OpenMeteoClient> _logger;
 
 
     public OpenMeteoClient(
         IHttpClientFactory httpClientFactory,
-        IWeatherServiceFactory weatherServiceFactory,
+        IWeatherClientFactory weatherServiceFactory,
         ILogger<OpenMeteoClient> logger)
     {
         _httpClient = httpClientFactory.CreateClient("WeatherApi");
@@ -24,13 +23,20 @@ public class OpenMeteoClient : IWeatherClient
         _logger = logger;
     }
 
-    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO request)
+    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO requestDTO)
     {
-        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {serviceName}");
+        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {requestDTO.ServiceName}, environment {requestDTO.Environment}");
 
         try
         {
-            var service = _weatherServiceFactory.CreateWeatherService(serviceName)
+            var request = new WeatherClientCreationRequest
+            {
+                ServiceName = requestDTO.ServiceName,
+                Environment = requestDTO.Environment,
+
+            };
+
+            var client = _weatherServiceFactory.CreateWeatherService(request);
 
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
