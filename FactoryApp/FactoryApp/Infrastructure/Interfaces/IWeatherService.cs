@@ -4,6 +4,6 @@ namespace FactoryApp.Infrastructure.Interfaces;
 
 public interface IWeatherService
 {
-    Task<Weather?> GetCurrentWeatherAsync(double latitude, double longitude);
+    Task<Weather?> GetCurrentWeatherAsync(string serviceName);
     bool SupportsFeature(string feature);
 } 

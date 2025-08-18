@@ -1,4 +1,5 @@
 using FactoryApp.Domain.Entities;
+using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
 using System.Text.Json;
 using static FactoryApp.Domain.Entities.WeatherServiceTypes;
@@ -8,25 +9,30 @@ namespace FactoryApp.Infrastructure;
 public class OpenMeteoService : IWeatherService
 {
     private readonly HttpClient _httpClient;
+    private readonly IWeatherServiceFactory _weatherServiceFactory;
     private readonly ILogger<OpenMeteoService> _logger;
-    private readonly WeatherServiceType _serviceType;
 
 
-    public OpenMeteoService(IHttpClientFactory httpClientFactory, WeatherServiceType serviceType, ILogger<OpenMeteoService> logger)
+    public OpenMeteoService(
+        IHttpClientFactory httpClientFactory,
+        IWeatherServiceFactory weatherServiceFactory,
+        ILogger<OpenMeteoService> logger)
     {
         _httpClient = httpClientFactory.CreateClient("WeatherApi");
-        _serviceType = serviceType;
+        _weatherServiceFactory = weatherServiceFactory;
         _logger = logger;
     }
 
-    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequest request)
+    public async Task<Weather?> GetCurrentWeatherAsync(string serviceName)
     {
+        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {serviceName}");
+
         try
         {
-            var service = GetConfigForService(_serviceType);
-            
-            _logger.LogInformation("Fetching weather data from Open-Meteo API for coordinates: {Latitude}, {Longitude}", latitude, longitude);
-            
+            var service = _weatherServiceFactory.CreateWeatherService(serviceName)
+
+
+
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             
