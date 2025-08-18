@@ -9,11 +9,15 @@ namespace FactoryApp.Presentation.Controllers;
 [Route("api/[controller]")]
 public class WeatherController : ControllerBase
 {
-    private readonly GetCurrentWeatherUseCase _getCurrentWeatherUseCase;
+    private readonly IWeatherService _weatherService;
+    private readonly ILogger<WeatherController> _logger;
 
-    public WeatherController(GetCurrentWeatherUseCase getCurrentWeatherUseCase)
+    public WeatherController(
+        IWeatherService currentWeather,
+        ILogger<WeatherController> logger)
     {
-        _getCurrentWeatherUseCase = getCurrentWeatherUseCase;
+        _weatherService = currentWeather;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -24,10 +28,10 @@ public class WeatherController : ControllerBase
         {
             var request = new WeatherRequestDTO
             {
-                ServiceName = serviceType.,
+                ServiceName = serviceType,
             };
 
-            var response = await _getCurrentWeatherUseCase.GetWeatherAsync(request);
+            var response = await _weatherService.GetWeatherAsync(request);
             return Ok(response);
         }
         catch (ArgumentException ex)

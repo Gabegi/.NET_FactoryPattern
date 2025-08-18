@@ -4,11 +4,11 @@ using FactoryApp.Presentation.DTOs;
 
 namespace FactoryApp.Application.UseCases;
 
-public class GetCurrentWeatherUseCase
+public class GetCurrentWeatherService
 {
-    private readonly IWeatherService _weatherService;
+    private readonly Infrastructure.Interfaces.IWeatherService _weatherService;
 
-    public GetCurrentWeatherUseCase(IWeatherService weatherService)
+    public GetCurrentWeatherService(Infrastructure.Interfaces.IWeatherService weatherService)
     {
         _weatherService = weatherService;
     }
@@ -17,7 +17,7 @@ public class GetCurrentWeatherUseCase
     // TO DO: Use WeatherRequestDTO
     public async Task<Weather?> GetWeatherAsync(WeatherRequestDTO request)
     {
-        return await _weatherService.GetCurrentWeatherAsync(serviceName);
+        return await _weatherService.GetCurrentWeatherAsync(request);
 
     }
 } 

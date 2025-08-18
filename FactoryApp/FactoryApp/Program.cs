@@ -34,7 +34,7 @@ builder.Services.AddScoped<IRetryPolicyService, SimpleRetryPolicyService>();
 builder.Services.AddScoped<IWeatherServiceFactory, WeatherServiceFactory>();
 
 // Register use case
-builder.Services.AddScoped<GetCurrentWeatherUseCase>();
+builder.Services.AddScoped<GetCurrentWeatherService>();
 
 // Register logging
 builder.Services.AddLogging();
