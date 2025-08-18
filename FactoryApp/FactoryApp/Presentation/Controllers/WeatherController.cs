@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
 using FactoryApp.Application.UseCases;
-using static FactoryApp.Domain.Entities.WeatherServiceTypes;
+using FactoryApp.Domain.Entities;
+using FactoryApp.Presentation.DTOs;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FactoryApp.Presentation.Controllers;
 
@@ -21,17 +22,23 @@ public class WeatherController : ControllerBase
     {
         try
         {
+            var request = new WeatherRequestDTO
+            {
+                ServiceName = serviceName,
+            };
+
             var response = await _getCurrentWeatherUseCase.ExecuteAsync(request);
-            if (weather == null)
-                return NotFound("Could not fetch weather.");
-
-
-
             return Ok(response);
         }
         catch (ArgumentException ex)
         {
-            return BadRequest(ex.Message);
+            _logger.LogWarning("Invalid request: {Message}", ex.Message);
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get weather for service: {ServiceName}", serviceName);
+            return StatusCode(500, new { error = "Internal server error occurred" });
         }
     }
 } 

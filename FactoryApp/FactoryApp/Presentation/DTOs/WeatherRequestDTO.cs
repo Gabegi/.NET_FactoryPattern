@@ -1,8 +1,10 @@
-﻿namespace FactoryApp.Presentation.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FactoryApp.Presentation.DTOs
 {
     public class WeatherRequestDTO
     {
-        public string ServiceName { get; set; } = string.Empty;
+        public required string ServiceName { get; init; } 
         public string Environment { get; set; } = string.Empty;
     }
 }
