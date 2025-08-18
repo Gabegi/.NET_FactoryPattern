@@ -24,7 +24,7 @@ public class WeatherController : ControllerBase
         {
             var request = new WeatherRequestDTO
             {
-                ServiceName = serviceName,
+                ServiceName = serviceType.,
             };
 
             var response = await _getCurrentWeatherUseCase.ExecuteAsync(request);
