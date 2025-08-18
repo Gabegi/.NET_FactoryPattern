@@ -3,11 +3,11 @@ using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Services;
 
-public class AuthenticatedWeatherService : IWeatherService
+public class AuthenticatedWeatherService : IWeatherClient
 {
-    private readonly IWeatherService _weatherService;
+    private readonly IWeatherClient _weatherService;
 
-    public AuthenticatedWeatherService(IWeatherService weatherService)
+    public AuthenticatedWeatherService(IWeatherClient weatherService)
     {
         _weatherService = weatherService;
     }

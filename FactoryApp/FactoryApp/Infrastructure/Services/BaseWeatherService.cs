@@ -20,7 +20,7 @@ namespace FactoryApp.Infrastructure.Services
         //{
         //    return CreateBaseService(serviceName);
         //}
-        internal IWeatherService CreateBaseService(string serviceName)
+        internal IWeatherClient CreateBaseService(string serviceName)
         {
             // Mock service for development/testing
             if (IsNonProductionEnvironment(serviceName))
@@ -49,34 +49,34 @@ namespace FactoryApp.Infrastructure.Services
             };
         }
 
-        internal IWeatherService CreateTokyoService(WeatherServiceCreationRequest request)
+        internal IWeatherClient CreateTokyoService(WeatherServiceCreationRequest request)
         {
             _logger.LogDebug("Creating European weather service");
-            return _serviceProvider.GetRequiredService<OpenMeteoService>();
+            return _serviceProvider.GetRequiredService<OpenMeteoClient>();
         }
 
-        internal IWeatherService CreateNewYorkService(WeatherServiceCreationRequest request)
+        internal IWeatherClient CreateNewYorkService(WeatherServiceCreationRequest request)
         {
             _logger.LogDebug("Creating North American weather service");
-            return _serviceProvider.GetRequiredService<OpenMeteoService>();
+            return _serviceProvider.GetRequiredService<OpenMeteoClient>();
         }
 
-        internal IWeatherService CreateAsianService(WeatherServiceCreationRequest request)
+        internal IWeatherClient CreateAsianService(WeatherServiceCreationRequest request)
         {
             _logger.LogDebug("Creating Asian weather service");
-            return _serviceProvider.GetRequiredService<OpenMeteoService>();
+            return _serviceProvider.GetRequiredService<OpenMeteoClient>();
         }
 
-        internal IWeatherService CreateGlobalService(WeatherServiceCreationRequest request)
+        internal IWeatherClient CreateGlobalService(WeatherServiceCreationRequest request)
         {
             _logger.LogDebug("Creating global weather service");
-            return _serviceProvider.GetRequiredService<OpenMeteoService>();
+            return _serviceProvider.GetRequiredService<OpenMeteoClient>();
         }
 
-        internal IWeatherService CreateDefaultService(WeatherServiceCreationRequest request)
+        internal IWeatherClient CreateDefaultService(WeatherServiceCreationRequest request)
         {
             _logger.LogDebug("Creating default weather service");
-            return _serviceProvider.GetRequiredService<OpenMeteoService>();
+            return _serviceProvider.GetRequiredService<OpenMeteoClient>();
         }
 
 

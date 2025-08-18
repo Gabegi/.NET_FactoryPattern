@@ -24,7 +24,7 @@ builder.Services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
 
 // Register weather services
 builder.Services.AddScoped<MockWeatherService>();
-builder.Services.AddScoped<OpenMeteoService>();
+builder.Services.AddScoped<OpenMeteoClient>();
 
 // Register cache and retry services
 builder.Services.AddSingleton<ICacheService, MemoryCacheService>();

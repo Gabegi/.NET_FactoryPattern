@@ -33,7 +33,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
     // create service based on env and region
     // Apply conditional decorators based on requirements
 
-    public IWeatherService CreateBaseService(string serviceName)
+    public IWeatherClient CreateBaseService(string serviceName)
     {
         if (!Enum.TryParse<WeatherServiceType>(serviceName, out var serviceType))
         {
@@ -47,7 +47,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
 
 
     // STEP 2: Apply conditional decorators
-    private IWeatherService ApplyConditionalDecorators(IWeatherService baseService, WeatherServiceCreationRequest request)
+    private IWeatherClient ApplyConditionalDecorators(IWeatherClient baseService, WeatherServiceCreationRequest request)
     {
         var service = baseService;
 
@@ -73,7 +73,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
     }
 
     // STEP 3: Configure service settings
-    private void ConfigureServiceSettings(IWeatherService service, WeatherServiceCreationRequest request)
+    private void ConfigureServiceSettings(IWeatherClient service, WeatherServiceCreationRequest request)
     {
         if (request.CustomTimeoutSeconds.HasValue)
         {
@@ -97,7 +97,7 @@ public class WeatherServiceFactory : IWeatherServiceFactory
     }
 
     // STEP 4: Validate service requirements
-    private void ValidateServiceRequirements(IWeatherService service, WeatherServiceCreationRequest request)
+    private void ValidateServiceRequirements(IWeatherClient service, WeatherServiceCreationRequest request)
     {
         foreach (var feature in request.RequiredFeatures)
         {

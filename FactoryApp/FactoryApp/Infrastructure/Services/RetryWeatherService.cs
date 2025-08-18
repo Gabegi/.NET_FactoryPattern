@@ -3,12 +3,12 @@ using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Services;
 
-public class RetryWeatherService : IWeatherService
+public class RetryWeatherService : IWeatherClient
 {
-    private readonly IWeatherService _weatherService;
+    private readonly IWeatherClient _weatherService;
     private readonly IRetryPolicyService _retryService;
 
-    public RetryWeatherService(IWeatherService weatherService, IRetryPolicyService retryService)
+    public RetryWeatherService(IWeatherClient weatherService, IRetryPolicyService retryService)
     {
         _weatherService = weatherService;
         _retryService = retryService;

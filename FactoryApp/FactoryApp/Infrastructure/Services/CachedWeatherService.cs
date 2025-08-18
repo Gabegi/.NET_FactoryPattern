@@ -3,12 +3,12 @@ using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Services;
 
-public class CachedWeatherService : IWeatherService
+public class CachedWeatherService : IWeatherClient
 {
-    private readonly IWeatherService _weatherService;
+    private readonly IWeatherClient _weatherService;
     private readonly ICacheService _cacheService;
 
-    public CachedWeatherService(IWeatherService weatherService, ICacheService cacheService)
+    public CachedWeatherService(IWeatherClient weatherService, ICacheService cacheService)
     {
         _weatherService = weatherService;
         _cacheService = cacheService;

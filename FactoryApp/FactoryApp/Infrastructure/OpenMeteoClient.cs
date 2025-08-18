@@ -6,17 +6,17 @@ using static FactoryApp.Domain.Entities.WeatherServiceTypes;
 
 namespace FactoryApp.Infrastructure;
 
-public class OpenMeteoService : IWeatherService
+public class OpenMeteoClient : IWeatherClient
 {
     private readonly HttpClient _httpClient;
     private readonly IWeatherServiceFactory _weatherServiceFactory;
-    private readonly ILogger<OpenMeteoService> _logger;
+    private readonly ILogger<OpenMeteoClient> _logger;
 
 
-    public OpenMeteoService(
+    public OpenMeteoClient(
         IHttpClientFactory httpClientFactory,
         IWeatherServiceFactory weatherServiceFactory,
-        ILogger<OpenMeteoService> logger)
+        ILogger<OpenMeteoClient> logger)
     {
         _httpClient = httpClientFactory.CreateClient("WeatherApi");
         _weatherServiceFactory = weatherServiceFactory;

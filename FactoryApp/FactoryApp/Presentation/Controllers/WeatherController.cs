@@ -2,6 +2,7 @@ using FactoryApp.Application.UseCases;
 using FactoryApp.Domain.Entities;
 using FactoryApp.Presentation.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using FactoryApp.Domain.Entities;
 
 namespace FactoryApp.Presentation.Controllers;
 
@@ -41,7 +42,7 @@ public class WeatherController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get weather for service: {ServiceName}", serviceName);
+            _logger.LogError(ex, "Failed to get weather for service: {ServiceName}");
             return StatusCode(500, new { error = "Internal server error occurred" });
         }
     }

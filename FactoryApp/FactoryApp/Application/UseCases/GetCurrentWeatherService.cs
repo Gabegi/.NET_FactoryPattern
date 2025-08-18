@@ -6,9 +6,9 @@ namespace FactoryApp.Application.UseCases;
 
 public class GetCurrentWeatherService
 {
-    private readonly Infrastructure.Interfaces.IWeatherService _weatherService;
+    private readonly Infrastructure.Interfaces.IWeatherClient _weatherService;
 
-    public GetCurrentWeatherService(Infrastructure.Interfaces.IWeatherService weatherService)
+    public GetCurrentWeatherService(IOpen weatherService)
     {
         _weatherService = weatherService;
     }

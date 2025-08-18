@@ -3,13 +3,13 @@
 
         public enum WeatherServiceType
         {
-            [WeatherServiceConfig("https://dev-api.openmeteo.com/v1/forecast", "asia", "dev", "Asia/Tokyo", 30, 35.6762, 139.6503)]
+            [WeatherServiceConfig("https://dev-api.openmeteo.com/v1/forecast", "asia", "dev", "Tokyo", 30, 35.6762, 139.6503)]
             TokyoDevUser,
 
-            [WeatherServiceConfig("https://api.openmeteo.com/v1/forecast", "asia", "prod", "Asia/Tokyo", 10, 35.6762, 139.6503)]
+            [WeatherServiceConfig("https://api.openmeteo.com/v1/forecast", "asia", "prod", "Tokyo", 10, 35.6762, 139.6503)]
             TokyoPrdAdmin,
 
-            [WeatherServiceConfig("https://dev-api.openmeteo.com/v1/forecast", "europe", "dev", "Europe/London", 30, 51.5074, -0.1278)]
+            [WeatherServiceConfig("https://dev-api.openmeteo.com/v1/forecast", "europe", "dev", "London", 30, 51.5074, -0.1278)]
             LondonDevUser,
 
             [WeatherServiceConfig("https://api.openmeteo.com/v1/forecast", "europe", "prod", "Europe/London", 10, 51.5074, -0.1278)]
