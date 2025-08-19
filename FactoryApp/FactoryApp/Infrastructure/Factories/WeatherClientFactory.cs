@@ -1,6 +1,7 @@
 using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Infrastructure.Services;
+using System.Reflection;
 
 namespace FactoryApp.Infrastructure.Factories;
 
@@ -24,8 +25,10 @@ public class WeatherClientFactory : IWeatherClientFactory
     {
         _logger.LogDebug("Creating weather client for service: {ServiceName}", request.ServiceName);
 
+        var config = GetConfig(request);
+
         // Create base weather service
-        var baseService = _baseService.CreateBaseService(request);
+        var baseService = _baseService.Create(request);
 
         // STEP 2: Apply conditional decorators
         var decoratedService = ApplyConditionalDecorators(baseService, request);
@@ -38,6 +41,20 @@ public class WeatherClientFactory : IWeatherClientFactory
 
         _logger.LogInformation("Successfully created weather client for service: {ServiceName}", request.ServiceName);
         return decoratedService;
+    }
+
+    private static WeatherServiceConfigAttribute GetConfig(WeatherClientCreationRequest request)
+    {
+        if (!Enum.TryParse<WeatherServiceType>(request.ServiceName, out var serviceType))
+        {
+            throw new ArgumentException($"Invalid service name: {request.ServiceName}");
+        }
+
+        var memberInfo = typeof(WeatherServiceType).GetMember(serviceType.ToString()).FirstOrDefault();
+        var attribute = memberInfo?.GetCustomAttribute<WeatherServiceConfigAttribute>();
+        if (attribute == null)
+        { throw new InvalidOperationException($"No config found for {serviceType}"); }
+        return attribute;
     }
 
 

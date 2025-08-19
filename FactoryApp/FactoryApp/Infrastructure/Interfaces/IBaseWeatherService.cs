@@ -6,6 +6,6 @@ namespace FactoryApp.Infrastructure.Interfaces
 {
     interface IBaseWeatherService
     {
-        Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request);
+        HttpClient CreateBaseClient(WeatherClientCreationRequest request, WeatherServiceConfigAttribute config);
     }
 }
