@@ -9,13 +9,16 @@ namespace FactoryApp.Infrastructure.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<WeatherClientFactory> _logger;
+        private readonly IHttpClientFactory _httpClientFactory;
 
         public BaseClientConfig(
         IServiceProvider serviceProvider,
-        ILogger<WeatherClientFactory> logger)
+        ILogger<WeatherClientFactory> logger,
+        IHttpClientFactory httpClientFactory)
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
+            _httpClientFactory = httpClientFactory;
         }
 
         public IWeatherClient CreateClient(WeatherClientCreationRequest request)
@@ -28,8 +31,7 @@ namespace FactoryApp.Infrastructure.Services
             var config = GetConfig(serviceType);
 
             _logger.LogInformation(
-                "Creating WeatherClient for {ServiceName} ({Region}, {Env})",
-                serviceName, config.Region, config.Environment);
+               $"Creating WeatherClient for {request.ServiceName} ({config.Region}, {config.Environment})");
 
             var httpClient = _httpClientFactory.CreateClient("WeatherApi");
             httpClient.BaseAddress = new Uri(config.BaseUrl);
