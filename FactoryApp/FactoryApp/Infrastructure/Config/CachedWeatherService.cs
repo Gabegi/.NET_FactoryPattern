@@ -39,4 +39,17 @@ public class CachedWeatherService : IWeatherClient
     {
         return _weatherService.SupportsFeature(feature);
     }
+
+    public bool SupportsFeature(string feature)
+    {
+        return feature.ToLowerInvariant() switch
+        {
+            "current_weather" => true,
+            "forecast" => true,
+            "historical" => true,
+            "hourly" => true,
+            "daily" => true,
+            _ => false
+        };
+    }
 }

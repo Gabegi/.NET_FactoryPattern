@@ -1,4 +1,6 @@
-﻿namespace FactoryApp.Domain.Entities
+﻿using System.Reflection;
+
+namespace FactoryApp.Domain.Entities
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class WeatherServiceConfigAttribute : Attribute
@@ -28,5 +30,23 @@
             DefaultLatitude = defaultLatitude == 0 ? null : defaultLatitude;
             DefaultLongitude = defaultLongitude == 0 ? null : defaultLongitude;
         }
+
+        public static WeatherServiceConfigAttribute GetConfig(WeatherServiceType serviceType)
+        {
+            var memberInfo = typeof(WeatherServiceType)
+                .GetMember(serviceType.ToString())
+                .FirstOrDefault();
+
+            var attribute = memberInfo?
+                .GetCustomAttribute<WeatherServiceConfigAttribute>();
+
+            if (attribute == null)
+            {
+                throw new InvalidOperationException($"No config found for {serviceType}");
+            }
+
+            return attribute;
+        }
     }
+
 }

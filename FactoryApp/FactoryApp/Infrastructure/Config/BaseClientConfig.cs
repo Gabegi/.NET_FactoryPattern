@@ -37,25 +37,8 @@ namespace FactoryApp.Infrastructure.Services
             httpClient.BaseAddress = new Uri(config.BaseUrl);
             httpClient.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
 
-            return new WeatherClient(httpClient, config);
-        }
-
-        private static WeatherServiceConfigAttribute GetConfig(WeatherServiceType serviceType)
-        {
-            var memberInfo = typeof(WeatherServiceType)
-                .GetMember(serviceType.ToString())
-                .FirstOrDefault();
-
-            var attribute = memberInfo?
-                .GetCustomAttribute<WeatherServiceConfigAttribute>();
-
-            if (attribute == null)
-            {
-                throw new InvalidOperationException($"No config found for {serviceType}");
-            }
-
-            return attribute;
+            return new OpenMeteoClient(httpClient, config);
         }
     }
 }
-}
+

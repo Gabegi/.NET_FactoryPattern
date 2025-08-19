@@ -36,8 +36,6 @@ public class OpenMeteoClient : IWeatherClient
 
             };
 
-            var client = _weatherServiceFactory.CreateWeatherService(request);
-
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             
@@ -61,18 +59,5 @@ public class OpenMeteoClient : IWeatherClient
             _logger.LogError(ex, "Error deserializing weather data for coordinates: {Latitude}, {Longitude}", latitude, longitude);
             return null;
         }
-    }
-
-    public bool SupportsFeature(string feature)
-    {
-        return feature.ToLowerInvariant() switch
-        {
-            "current_weather" => true,
-            "forecast" => true,
-            "historical" => true,
-            "hourly" => true,
-            "daily" => true,
-            _ => false
-        };
     }
 } 
