@@ -1,5 +1,6 @@
 using FactoryApp.Application.UseCases;
 using FactoryApp.Infrastructure;
+using FactoryApp.Infrastructure.Config;
 using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Infrastructure.Services;
@@ -11,38 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register HttpClient with configuration from appsettings
-builder.Services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
-{
-    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var timeoutSeconds = configuration.GetValue<int>("WeatherApi:TimeoutSeconds", 30);
-    var userAgent = configuration.GetValue<string>("WeatherApi:UserAgent", "WeatherApp/1.0");
-
-    client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
-    client.DefaultRequestHeaders.Add("User-Agent", userAgent);
-});
-
-
-// HttpClient WITH caching
-builder.Services.AddHttpClient("WeatherApiCached", (serviceProvider, client) =>
-{
-    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var timeoutSeconds = configuration.GetValue<int>("WeatherApi:TimeoutSeconds", 30);
-    var userAgent = configuration.GetValue<string>("WeatherApi:UserAgent", "WeatherApp/1.0");
-    var baseUrl = configuration.GetValue<string>("WeatherApi:BaseUrl", "");
-
-    client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
-    client.DefaultRequestHeaders.Add("User-Agent", userAgent);
-
-    if (!string.IsNullOrEmpty(baseUrl))
-    {
-        client.BaseAddress = new Uri(baseUrl);
-    }
-})
-.AddHttpMessageHandler<WeatherCachingHandler>(); // Add caching handler
-
-// Register the caching handler
-builder.Services.AddTransient<WeatherCachingHandler>();
+// Add weather-related services using extension methods
+builder.Services.AddWeatherHttpClients();  // This adds both HttpClients and caching
+builder.Services.AddWeatherServices();     // This adds your business services
 
 // Register weather services
 builder.Services.AddScoped<MockWeatherClient>();

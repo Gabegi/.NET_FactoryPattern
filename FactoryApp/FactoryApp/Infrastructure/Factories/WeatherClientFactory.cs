@@ -31,16 +31,16 @@ public class WeatherClientFactory : IWeatherClientFactory
         var baseClient = _baseClient.CreateBaseClient(request, clientAttributes);
 
         // STEP 2: Apply conditional decorators
-        var customisedClient = CustomiseHttpClient(baseClient, request);
+        var httpClient = CustomiseHttpClient(baseClient, request);
 
-        //// STEP 3: Configure service settings
-        //ConfigureServiceSettings(customisedClient, request);
+        // STEP 3: Configure service settings
+        ConfigureServiceSettings(httpClient, request);
 
-        //// STEP 4: Validate service requirements
-        //ValidateServiceRequirements(customisedClient, request);
+        // STEP 4: Validate service requirements
+        ValidateServiceRequirements(httpClient, request);
 
         _logger.LogInformation("Successfully created weather client for service: {ServiceName}", request.ServiceName);
-        return customisedClient;
+        return httpClient;
     }
 
     private static WeatherServiceConfigAttribute GetClientAttributes(WeatherClientCreationRequest request)

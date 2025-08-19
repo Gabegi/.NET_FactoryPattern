@@ -1,10 +1,12 @@
 ﻿using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
 using static FactoryApp.Infrastructure.Config.CachingConfig;
+using Microsoft.Extensions.Caching.Hybrid;
 
-namespace FactoryApp.Infrastructure.Config
+
+namespace FactoryApp.Infrastructure
 {
-    public class HttpClientExtension
+    public class InfrastructureExtension
     {
         public static class ServiceCollectionExtensions
         {
@@ -45,9 +47,9 @@ namespace FactoryApp.Infrastructure.Config
 
             private static void ConfigureWeatherClient(HttpClient client, IConfiguration configuration)
             {
-                var timeoutSeconds = configuration.GetValue<int>("WeatherApi:TimeoutSeconds", 30);
-                var userAgent = configuration.GetValue<string>("WeatherApi:UserAgent", "WeatherApp/1.0");
-                var baseUrl = configuration.GetValue<string>("WeatherApi:BaseUrl", "");
+                var timeoutSeconds = configuration.GetValue("WeatherApi:TimeoutSeconds", 30);
+                var userAgent = configuration.GetValue("WeatherApi:UserAgent", "WeatherApp/1.0");
+                var baseUrl = configuration.GetValue("WeatherApi:BaseUrl", "");
 
                 client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
                 client.DefaultRequestHeaders.Add("User-Agent", userAgent);
