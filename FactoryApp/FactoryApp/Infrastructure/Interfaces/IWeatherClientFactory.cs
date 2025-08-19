@@ -1,6 +1,4 @@
-﻿using FactoryApp.Infrastructure.Interfaces;
-
-namespace FactoryApp.Infrastructure.Factories;
+﻿namespace FactoryApp.Infrastructure.Interfaces;
 
 public interface IWeatherClientFactory
 {
