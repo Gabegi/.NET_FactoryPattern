@@ -25,7 +25,7 @@ namespace FactoryApp.Infrastructure.Services
 
         public async Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request)
         {
-            var httpClient = CreateClient(request);
+            var httpClient = CreateBaseClient(request);
             var url = _configuration["WeatherApi:Url"] ?? throw new InvalidOperationException("WeatherApi:Url not found in appsettings");
 
             var response = await httpClient.GetAsync(url);
@@ -41,7 +41,7 @@ namespace FactoryApp.Infrastructure.Services
             return result ?? throw new InvalidOperationException("Failed to deserialize weather response - received null");
         } 
         
-        private HttpClient CreateClient(WeatherClientCreationRequest request)
+        private HttpClient CreateBaseClient(WeatherClientCreationRequest request)
         {
             _logger.LogInformation($"Creating WeatherClient for {request.ServiceName} ({request.Region}, {request.Environment})");
             
