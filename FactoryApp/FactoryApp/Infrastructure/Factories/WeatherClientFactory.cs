@@ -25,25 +25,25 @@ public class WeatherClientFactory : IWeatherClientFactory
     {
         _logger.LogDebug("Creating weather client for service: {ServiceName}", request.ServiceName);
 
-        var config = GetConfig(request);
+        var clientAttributes = GetClientAttributes(request);
 
         // Create base http weather client
-        var baseClient = _baseClient.CreateBaseClient(request, config);
+        var baseClient = _baseClient.CreateBaseClient(request, clientAttributes);
 
         // STEP 2: Apply conditional decorators
-        var decoratedService = CustomiseHttpClient(baseClient, request);
+        var customisedClient = CustomiseHttpClient(baseClient, request);
 
-        // STEP 3: Configure service settings
-        ConfigureServiceSettings(decoratedService, request);
+        //// STEP 3: Configure service settings
+        //ConfigureServiceSettings(customisedClient, request);
 
-        // STEP 4: Validate service requirements
-        ValidateServiceRequirements(decoratedService, request);
+        //// STEP 4: Validate service requirements
+        //ValidateServiceRequirements(customisedClient, request);
 
         _logger.LogInformation("Successfully created weather client for service: {ServiceName}", request.ServiceName);
-        return decoratedService;
+        return customisedClient;
     }
 
-    private static WeatherServiceConfigAttribute GetConfig(WeatherClientCreationRequest request)
+    private static WeatherServiceConfigAttribute GetClientAttributes(WeatherClientCreationRequest request)
     {
         if (!Enum.TryParse<WeatherServiceType>(request.ServiceName, out var serviceType))
         {
@@ -66,7 +66,7 @@ public class WeatherClientFactory : IWeatherClientFactory
 
         if (request.EnableCaching)
         {
-            client
+            client.
             _logger.LogDebug("Applied caching decorator");
         }
 
