@@ -6,42 +6,38 @@ namespace FactoryApp.Infrastructure.Factories;
 
 public class WeatherClientFactory : IWeatherClientFactory
 {
-    private readonly IServiceProvider _serviceProvider;
     private readonly IConfiguration _configuration;
     private readonly ILogger<WeatherClientFactory> _logger;
-    private readonly ICacheService _cacheService;
-    private readonly IRetryPolicyService _retryService;
     private readonly IBaseWeatherService _baseService;
 
     public WeatherClientFactory(
-        IServiceProvider serviceProvider,
         IConfiguration configuration,
         ILogger<WeatherClientFactory> logger,
-        ICacheService cacheService,
-        IRetryPolicyService retryService,
         IBaseWeatherService baseService)
     {
-        _serviceProvider = serviceProvider;
         _configuration = configuration;
         _logger = logger;
-        _cacheService = cacheService;
-        _retryService = retryService;
         _baseService = baseService;
     }
 
-    // ✅ steps
-    // create service based on env and region
-    // Apply conditional decorators based on requirements
-
     public IWeatherClient CreateClient(WeatherClientCreationRequest request)
     {
-        if (!Enum.TryParse<WeatherServiceType>(serviceName, out var serviceType))
-        {
-            throw new ArgumentException($"Invalid service name: {serviceName}. Must be one of: {string.Join(", ", Enum.GetNames<WeatherServiceType>())}");
-        }
+        _logger.LogDebug("Creating weather client for service: {ServiceName}", request.ServiceName);
 
-        var httpClient = _httpClientFactory.CreateClient("WeatherService");
-        return new UnifiedWeatherService(httpClient, serviceType, _logger);
+        // Create base weather service
+        var baseService = _baseService.CreateBaseService(request);
+
+        // STEP 2: Apply conditional decorators
+        var decoratedService = ApplyConditionalDecorators(baseService, request);
+
+        // STEP 3: Configure service settings
+        ConfigureServiceSettings(decoratedService, request);
+
+        // STEP 4: Validate service requirements
+        ValidateServiceRequirements(decoratedService, request);
+
+        _logger.LogInformation("Successfully created weather client for service: {ServiceName}", request.ServiceName);
+        return decoratedService;
     }
 
 

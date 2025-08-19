@@ -1,14 +1,15 @@
-﻿using FactoryApp.Infrastructure.Factories;
+﻿using FactoryApp.Domain.Entities;
+using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Services
 {
-    public class BaseWeatherService : IBaseWeatherService
+    public class BaseClientConfig : IBaseWeatherService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<WeatherClientFactory> _logger;
 
-        public BaseWeatherService(
+        public BaseClientConfig(
         IServiceProvider serviceProvider,
         ILogger<WeatherClientFactory> logger)
         {
@@ -20,7 +21,7 @@ namespace FactoryApp.Infrastructure.Services
         //{
         //    return CreateBaseService(serviceName);
         //}
-        internal IWeatherClient CreateBaseService(string serviceName)
+        internal IWeatherClient CreateBaseClient(WeatherClientCreationRequest request)
         {
             // Mock service for development/testing
             if (IsNonProductionEnvironment(serviceName))
