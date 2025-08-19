@@ -1,12 +1,10 @@
 ﻿using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
-using FactoryApp.Presentation.DTOs;
-using System.Text.Json;
 
 namespace FactoryApp.Infrastructure.Services
 {
-    public class BaseClientConfig : IBaseWeatherService
+    public class BaseClientConfig : IBaseClient
     {
         private readonly ILogger<WeatherClientFactory> _logger;
         private readonly IHttpClientFactory _httpClientFactory;

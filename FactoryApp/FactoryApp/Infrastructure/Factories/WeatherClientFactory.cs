@@ -9,16 +9,16 @@ public class WeatherClientFactory : IWeatherClientFactory
 {
     private readonly IConfiguration _configuration;
     private readonly ILogger<WeatherClientFactory> _logger;
-    private readonly IBaseWeatherService _baseService;
+    private readonly IBaseClient _baseClient;
 
     public WeatherClientFactory(
         IConfiguration configuration,
         ILogger<WeatherClientFactory> logger,
-        IBaseWeatherService baseService)
+        IBaseClient baseService)
     {
         _configuration = configuration;
         _logger = logger;
-        _baseService = baseService;
+        _baseClient = baseService;
     }
 
     public IWeatherClient CreateClient(WeatherClientCreationRequest request)
@@ -27,11 +27,11 @@ public class WeatherClientFactory : IWeatherClientFactory
 
         var config = GetConfig(request);
 
-        // Create base weather service
-        var baseService = _baseService.Create(request);
+        // Create base http weather client
+        var baseClient = _baseClient.CreateBaseClient(request, config);
 
         // STEP 2: Apply conditional decorators
-        var decoratedService = ApplyConditionalDecorators(baseService, request);
+        var decoratedService = CustomiseHttpClient(baseClient, request);
 
         // STEP 3: Configure service settings
         ConfigureServiceSettings(decoratedService, request);
@@ -60,13 +60,13 @@ public class WeatherClientFactory : IWeatherClientFactory
 
 
     // STEP 2: Apply conditional decorators
-    private IWeatherClient ApplyConditionalDecorators(IWeatherClient baseService, WeatherClientCreationRequest request)
+    private HttpClient CustomiseHttpClient(HttpClient client, WeatherClientCreationRequest request)
     {
-        var service = baseService;
+
 
         if (request.EnableCaching)
         {
-            service = new CachedWeatherService(service, _cacheService);
+            client
             _logger.LogDebug("Applied caching decorator");
         }
 
