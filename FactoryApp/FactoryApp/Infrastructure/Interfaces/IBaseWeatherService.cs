@@ -1,10 +1,11 @@
 ﻿
 using FactoryApp.Domain.Entities;
+using FactoryApp.Presentation.DTOs;
 
 namespace FactoryApp.Infrastructure.Interfaces
 {
     interface IBaseWeatherService
     {
-        IWeatherClient CreateBaseClient(WeatherClientCreationRequest request);
+        Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request);
     }
 }

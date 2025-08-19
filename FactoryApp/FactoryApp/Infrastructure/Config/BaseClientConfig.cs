@@ -2,7 +2,6 @@
 using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Presentation.DTOs;
-using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Json;
 
@@ -44,8 +43,7 @@ namespace FactoryApp.Infrastructure.Services
         
         private HttpClient CreateClient(WeatherClientCreationRequest request)
         {
-            _logger.LogInformation(
-   $"Creating WeatherClient for {request.ServiceName} ({request.Region}, {request.Environment})");
+            _logger.LogInformation($"Creating WeatherClient for {request.ServiceName} ({request.Region}, {request.Environment})");
             
             var config = GetConfig(request);
 
