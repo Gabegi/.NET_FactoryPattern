@@ -27,5 +27,9 @@
             [WeatherServiceConfig("https://api.openmeteo.com/v1/forecast", "global", "prod", "", 15)]
             GlobalPrdAdmin
         }
+
+
+
+
     
 }

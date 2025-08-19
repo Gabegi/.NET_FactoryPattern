@@ -1,6 +1,8 @@
 ﻿using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
+using FactoryApp.Presentation.DTOs;
+using System.Net.Http;
 using System.Reflection;
 
 namespace FactoryApp.Infrastructure.Services
@@ -21,7 +23,18 @@ namespace FactoryApp.Infrastructure.Services
             _httpClientFactory = httpClientFactory;
         }
 
-        public IWeatherClient CreateClient(WeatherClientCreationRequest request)
+        public async Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request)
+        {
+            var httpClient = CreateClient(request);
+
+            var response = await httpClient.GetAsync(
+                $"?lat={_config.Latitude}&lon={_config.Longitude}");
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        private HttpClient CreateClient(WeatherClientCreationRequest request)
         {
             if (!Enum.TryParse<WeatherServiceType>(request.ServiceName, out var serviceType))
             {
@@ -37,8 +50,19 @@ namespace FactoryApp.Infrastructure.Services
             httpClient.BaseAddress = new Uri(config.BaseUrl);
             httpClient.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
 
-            return new OpenMeteoClient(httpClient, config);
+            return httpClient;
         }
+
+        private static WeatherServiceConfigAttribute GetConfig(WeatherServiceType serviceType) 
+        { 
+            var memberInfo = typeof(WeatherServiceType).GetMember(serviceType.ToString()).FirstOrDefault(); 
+            var attribute = memberInfo?.GetCustomAttribute<WeatherServiceConfigAttribute>(); 
+            if (attribute == null) 
+            { throw new InvalidOperationException($"No config found for {serviceType}"); } 
+            return attribute; 
+        }
+
+
     }
 }
 
