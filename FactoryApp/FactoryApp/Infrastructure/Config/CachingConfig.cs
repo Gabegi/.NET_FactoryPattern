@@ -5,7 +5,7 @@ using System.Net;
 
 namespace FactoryApp.Infrastructure.Config
 {
-    public class CachingService
+    public class CachingConfig
     {
         // 1. Caching Handler
         public class ConditionalCachingHandler : DelegatingHandler

@@ -21,7 +21,9 @@ namespace FactoryApp.Infrastructure.Services
         {
             _logger.LogInformation($"Creating WeatherClient for {request.ServiceName} ({request.Region}, {request.Environment})");
 
-            var httpClient = _httpClientFactory.CreateClient("WeatherApi");
+            var httpClient = request.EnableCaching
+                ? _httpClientFactory.CreateClient("WeatherApiCached")  // With caching handler
+                : _httpClientFactory.CreateClient("WeatherApi");
             httpClient.BaseAddress = new Uri(config.BaseUrl);
             httpClient.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
 

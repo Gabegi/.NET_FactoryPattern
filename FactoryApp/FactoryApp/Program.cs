@@ -22,6 +22,28 @@ builder.Services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
     client.DefaultRequestHeaders.Add("User-Agent", userAgent);
 });
 
+
+// HttpClient WITH caching
+builder.Services.AddHttpClient("WeatherApiCached", (serviceProvider, client) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var timeoutSeconds = configuration.GetValue<int>("WeatherApi:TimeoutSeconds", 30);
+    var userAgent = configuration.GetValue<string>("WeatherApi:UserAgent", "WeatherApp/1.0");
+    var baseUrl = configuration.GetValue<string>("WeatherApi:BaseUrl", "");
+
+    client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
+    client.DefaultRequestHeaders.Add("User-Agent", userAgent);
+
+    if (!string.IsNullOrEmpty(baseUrl))
+    {
+        client.BaseAddress = new Uri(baseUrl);
+    }
+})
+.AddHttpMessageHandler<WeatherCachingHandler>(); // Add caching handler
+
+// Register the caching handler
+builder.Services.AddTransient<WeatherCachingHandler>();
+
 // Register weather services
 builder.Services.AddScoped<MockWeatherClient>();
 builder.Services.AddScoped<OpenMeteoClient>();
