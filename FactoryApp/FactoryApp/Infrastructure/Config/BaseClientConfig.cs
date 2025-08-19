@@ -10,24 +10,21 @@ namespace FactoryApp.Infrastructure.Services
 {
     public class BaseClientConfig : IBaseWeatherService
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<WeatherClientFactory> _logger;
         private readonly IConfiguration _configuration;
         private readonly IHttpClientFactory _httpClientFactory;
 
         public BaseClientConfig(
-        IServiceProvider serviceProvider,
         ILogger<WeatherClientFactory> logger,
         IConfiguration configuration,
         IHttpClientFactory httpClientFactory)
         {
-            _serviceProvider = serviceProvider;
             _logger = logger;
             _configuration = configuration;
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<WeatherResponseDTO?> GetForecastAsync(WeatherClientCreationRequest request)
+        public async Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request)
         {
             var httpClient = CreateClient(request);
             var url = _configuration["WeatherApi:Url"] ?? throw new InvalidOperationException("WeatherApi:Url not found in appsettings");
