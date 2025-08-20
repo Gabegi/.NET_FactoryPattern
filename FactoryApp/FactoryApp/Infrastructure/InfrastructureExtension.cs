@@ -1,6 +1,6 @@
 ﻿using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
-using static FactoryApp.Infrastructure.Config.CachingConfig;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.Caching.Hybrid;
 
 
@@ -26,6 +26,14 @@ namespace FactoryApp.Infrastructure
 
                 // Register the caching handler
                 services.AddTransient<WeatherCachingHandler>();
+                Services.AddTransient<RetryHandler>();
+                Services.AddTransient<AuthHandler>();
+                Services.AddTransient<LoggingHandler>();
+                Services.AddTransient<CachingHandler>();
+                Services.AddTransient<RateLimitHandler>();
+
+                builder.Services.AddHttpClient(); // the "raw" factory
+
 
                 // HttpClient WITHOUT caching
                 services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
