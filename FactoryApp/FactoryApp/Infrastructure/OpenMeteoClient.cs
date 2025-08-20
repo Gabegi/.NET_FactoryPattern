@@ -10,17 +10,26 @@ public class OpenMeteoClient : IWeatherClient
     private readonly HttpClient _httpClient;
     private readonly IWeatherClientFactory _weatherServiceFactory;
     private readonly ILogger<OpenMeteoClient> _logger;
-
+    private readonly IRuntimeHttpClientFactory _factory;
 
     public OpenMeteoClient(
         IHttpClientFactory httpClientFactory,
         IWeatherClientFactory weatherServiceFactory,
-        ILogger<OpenMeteoClient> logger)
+        ILogger<OpenMeteoClient> logger,
+        IRuntimeHttpClientFactory factory)
     {
         _httpClient = httpClientFactory.CreateClient("WeatherApi");
         _weatherServiceFactory = weatherServiceFactory;
         _logger = logger;
+        _factory = factory;
     }
+    public async Task RunAsync(HttpClientFeatures features)
+    {
+        var client = _factory.Create(features);
+        var response = await client.GetAsync("https://api.example.com/data");
+        response.EnsureSuccessStatusCode();
+    }
+
 
     public async Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request)
     {
