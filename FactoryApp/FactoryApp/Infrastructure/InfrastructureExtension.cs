@@ -32,7 +32,7 @@ namespace FactoryApp.Infrastructure
                 Services.AddTransient<CachingHandler>();
                 Services.AddTransient<RateLimitHandler>();
 
-                builder.Services.AddHttpClient(); // the "raw" factory
+                Services.AddHttpClient(); // the "raw" factory
 
 
                 // HttpClient WITHOUT caching
