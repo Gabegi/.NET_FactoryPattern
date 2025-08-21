@@ -31,6 +31,12 @@ public class OpenMeteoClient : IWeatherClient
     }
 
 
+
+    /// <summary>
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
     public async Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request)
     {
         var httpClient = CreateBaseClient(request);

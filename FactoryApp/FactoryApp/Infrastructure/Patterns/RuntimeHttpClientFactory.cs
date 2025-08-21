@@ -1,5 +1,4 @@
 ﻿using FactoryApp.Domain.Entities;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.Http;
 
 namespace FactoryApp.Infrastructure.Patterns
