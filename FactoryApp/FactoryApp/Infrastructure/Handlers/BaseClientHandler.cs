@@ -1,7 +1,6 @@
 ﻿using FactoryApp.Domain.Entities;
 using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
-using System.Net.Http;
 
 namespace FactoryApp.Infrastructure.Handlers
 {

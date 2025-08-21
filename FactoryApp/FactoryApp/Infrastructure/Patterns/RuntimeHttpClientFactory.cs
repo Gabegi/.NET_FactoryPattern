@@ -1,4 +1,5 @@
 ﻿using FactoryApp.Domain.Entities;
+using FactoryApp.Infrastructure.Interfaces;
 using Microsoft.Extensions.Http;
 
 namespace FactoryApp.Infrastructure.Patterns
@@ -6,19 +7,21 @@ namespace FactoryApp.Infrastructure.Patterns
 
         public class RuntimeHttpClientFactory : IRuntimeHttpClientFactory
         {
-            private readonly IHttpClientFactory _factory;
+            private readonly IBaseClient _baseClient;
             private readonly IServiceProvider _sp;
 
-            public RuntimeHttpClientFactory(IHttpClientFactory factory, IServiceProvider sp)
+            public RuntimeHttpClientFactory(
+                IBaseClient baseClient, 
+                IServiceProvider sp)
             {
-                _factory = factory;
+                _baseClient = baseClient;
                 _sp = sp;
             }
 
-            public HttpClient Create(HttpClientFeatures features)
+            public HttpClient Create(HttpClientFeatures features, WeatherClientCreationRequest request, WeatherServiceConfigAttribute config)
             {
                 // Always start with a clean client
-                var client = _factory.CreateClient();
+                var client = _baseClient.CreateBaseClient(request, config);
 
                 var handlers = new List<DelegatingHandler>();
 
