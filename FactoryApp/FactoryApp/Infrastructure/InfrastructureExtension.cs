@@ -87,9 +87,9 @@ namespace FactoryApp.Infrastructure
             public static IServiceCollection AddWeatherServices(this IServiceCollection services)
             {
                 // Register your application services
-                services.AddScoped<IBaseClient, BaseClient>();
+                services.AddScoped<IBaseClient, BaseClientHandler>();
                 services.AddScoped<IWeatherClientFactory, WeatherClientFactory>();
-                services.AddScoped<IWeatherService, WeatherService>();
+                services.AddScoped<IWeatherClient, OpenMeteoClient>();
 
                 return services;
             }
