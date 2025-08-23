@@ -57,8 +57,7 @@ namespace FactoryApp.Infrastructure.Handlers;
             new HybridCacheEntryOptions
             {
                 Expiration = TimeSpan.FromMinutes(_cacheDurationMinutes)
-            },
-            cancellationToken);
+            });
 
         if (cached != null)
         {
