@@ -1,4 +1,5 @@
 ﻿using FactoryApp.Domain.Entities;
+using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
 using Microsoft.Extensions.Http;
 
@@ -29,7 +30,7 @@ namespace FactoryApp.Infrastructure.Patterns
                     handlers.Add(ActivatorUtilities.CreateInstance<CachingHandler>(_sp));
 
                 if (features.EnableRetry)
-                    handlers.Add(ActivatorUtilities.CreateInstance<RetryHandler>(_sp));
+                    handlers.Add(ActivatorUtilities.CreateInstance<ResilientHandler>(_sp));
 
                 if (features.EnableAuth)
                     handlers.Add(ActivatorUtilities.CreateInstance<AuthHandler>(_sp));

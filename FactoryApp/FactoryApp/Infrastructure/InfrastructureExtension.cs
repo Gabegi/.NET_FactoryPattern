@@ -1,7 +1,8 @@
 ﻿using FactoryApp.Infrastructure.Factories;
+using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Http.Resilience;
 
 
 namespace FactoryApp.Infrastructure
@@ -24,15 +25,30 @@ namespace FactoryApp.Infrastructure
                     };
                 });
 
-                // Register the caching handler
-                services.AddTransient<WeatherCachingHandler>();
-                Services.AddTransient<RetryHandler>();
-                Services.AddTransient<AuthHandler>();
-                Services.AddTransient<LoggingHandler>();
-                Services.AddTransient<CachingHandler>();
-                Services.AddTransient<RateLimitHandler>();
+                services.AddHttpClient("ResilientClient")
+                    .AddStandardResilienceHandler()
+                    .Configure(options =>
+                    {
+                        options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
+                        options.Retry.MaxRetryAttempts = 5;
+                        options.Retry.Delay = TimeSpan.Zero;
+                        options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(5);
+                        options.CircuitBreaker.MinimumThroughput = 5;
+                        options.CircuitBreaker.FailureRatio = 0.9;
+                        options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(5);
+                        options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(1);
+                    });
 
-                Services.AddHttpClient(); // the "raw" factory
+                services.AddHttpClient("PlainClient");
+
+
+                // Register the caching handler
+                services.AddTransient<CachingHandler>();
+                services.AddTransient<ResilientHandler>();
+                services.AddTransient<AuthHandler>();
+                services.AddTransient<CachingHandler>();
+
+                services.AddHttpClient(); // the "raw" factory
 
 
                 // HttpClient WITHOUT caching
@@ -48,7 +64,7 @@ namespace FactoryApp.Infrastructure
                     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
                     ConfigureWeatherClient(client, configuration);
                 })
-                .AddHttpMessageHandler<WeatherCachingHandler>(); // Add caching handler
+                .AddHttpMessageHandler<CachingHandler>(); // Add caching handler
 
                 return services;
             }

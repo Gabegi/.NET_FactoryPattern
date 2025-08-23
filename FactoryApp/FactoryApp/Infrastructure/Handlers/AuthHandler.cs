@@ -2,7 +2,7 @@
 
 namespace FactoryApp.Infrastructure.Handlers
 {
-    public class WeatherAuthHandler : DelegatingHandler
+    public class AuthHandler : DelegatingHandler
     {
         protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request, CancellationToken cancellationToken)
