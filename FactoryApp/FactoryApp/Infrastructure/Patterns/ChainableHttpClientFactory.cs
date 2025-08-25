@@ -7,15 +7,12 @@ namespace FactoryApp.Infrastructure.Patterns
     // Main factory implementation
     public class ChainableHttpClientFactory : IChainableHttpClientFactory
     {
-        private readonly IServiceProvider _serviceProvider;
         private readonly IBaseClient _baseClient;
         private readonly Dictionary<string, IHttpClientConfigurator> _configurators;
 
         public ChainableHttpClientFactory(
-            IServiceProvider serviceProvider,
             IBaseClient baseClient)
         {
-            _serviceProvider = serviceProvider;
             _baseClient = baseClient;
             _configurators = new Dictionary<string, IHttpClientConfigurator>
             {

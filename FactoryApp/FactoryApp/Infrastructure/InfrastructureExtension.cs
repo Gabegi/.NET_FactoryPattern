@@ -1,5 +1,4 @@
-﻿using FactoryApp.Infrastructure.Factories;
-using FactoryApp.Infrastructure.Handlers;
+﻿using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Http.Resilience;
@@ -43,7 +42,7 @@ namespace FactoryApp.Infrastructure
                 // Register the caching handler
                 services.AddTransient<CachingHandler>();
                 //services.AddTransient<ResilientHandler>();
-                services.AddTransient<AuthHandler>();
+                //services.AddTransient<AuthHandler>();
                 services.AddTransient<CachingHandler>();
 
                 services.AddHttpClient(); // the "raw" factory
@@ -86,7 +85,7 @@ namespace FactoryApp.Infrastructure
             {
                 // Register your application services
                 services.AddScoped<IBaseClient, BaseClientHandler>();
-                services.AddScoped<IWeatherClientFactory, WeatherClientFactory>();
+                //services.AddScoped<IWeatherClientFactory, WeatherClientFactory>();
                 services.AddScoped<IWeatherClient, OpenMeteoClient>();
 
                 return services;

@@ -23,12 +23,12 @@ public class OpenMeteoClient : IWeatherClient
         _logger = logger;
         _factory = factory;
     }
-    public async Task RunAsync(HttpClientFeatures features)
-    {
-        var client = _factory.Create(features);
-        var response = await client.GetAsync("https://api.example.com/data");
-        response.EnsureSuccessStatusCode();
-    }
+    //public async Task RunAsync(HttpClientFeatures features)
+    //{
+    //    var client = _factory.Create(features);
+    //    var response = await client.GetAsync("https://api.example.com/data");
+    //    response.EnsureSuccessStatusCode();
+    //}
 
 
 

@@ -1,16 +1,15 @@
 ﻿using FactoryApp.Domain.Entities;
-using FactoryApp.Infrastructure.Factories;
 using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Handlers
 {
     public class BaseClientHandler : IBaseClient
     {
-        private readonly ILogger<WeatherClientFactory> _logger;
+        private readonly ILogger<BaseClientHandler> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
 
         public BaseClientHandler(
-        ILogger<WeatherClientFactory> logger,
+        ILogger<BaseClientHandler> logger,
         IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
