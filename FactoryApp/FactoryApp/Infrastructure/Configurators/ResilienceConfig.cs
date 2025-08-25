@@ -5,14 +5,6 @@ namespace FactoryApp.Infrastructure.Configurators
 {
     public class ResilienceConfig : IHttpClientConfigurator
     {
-        private readonly IHttpClientBuilder _clientBuilder;
-        private readonly IServiceCollection _services;
-
-        public ResilienceConfig(IHttpClientBuilder clientBuilder, IServiceCollection services)
-        {
-            this._clientBuilder = clientBuilder;
-            this._services = services;
-        }
         public void Configure(
             IHttpClientBuilder clientBuilder,
             IServiceCollection services,
@@ -31,6 +23,10 @@ namespace FactoryApp.Infrastructure.Configurators
                 options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(5);
                 options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(1);
             });
+
+
         }
+
+
     }
 }

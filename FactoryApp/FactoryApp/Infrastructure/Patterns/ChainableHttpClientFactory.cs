@@ -8,12 +8,15 @@ namespace FactoryApp.Infrastructure.Patterns
     public class ChainableHttpClientFactory : IChainableHttpClientFactory
     {
         private readonly IBaseClient _baseClient;
+        private readonly IServiceProvider _serviceProvider;
         private readonly Dictionary<string, IHttpClientConfigurator> _configurators;
 
         public ChainableHttpClientFactory(
-            IBaseClient baseClient)
+            IBaseClient baseClient,
+            IServiceProvider serviceProvider)
         {
             _baseClient = baseClient;
+            _serviceProvider = serviceProvider;
             _configurators = new Dictionary<string, IHttpClientConfigurator>
             {
                 ["resilience"] = new ResilienceConfig()
