@@ -7,10 +7,8 @@ using Microsoft.Extensions.Http.Resilience;
 
 namespace FactoryApp.Infrastructure
 {
-    public class InfrastructureExtension
+    public static class InfrastructureExtension
     {
-        public static class ServiceCollectionExtensions
-        {
             public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
             {
                 // Configure HybridCache
@@ -44,7 +42,7 @@ namespace FactoryApp.Infrastructure
 
                 // Register the caching handler
                 services.AddTransient<CachingHandler>();
-                services.AddTransient<ResilientHandler>();
+                //services.AddTransient<ResilientHandler>();
                 services.AddTransient<AuthHandler>();
                 services.AddTransient<CachingHandler>();
 
@@ -95,4 +93,4 @@ namespace FactoryApp.Infrastructure
             }
         }
     }
-}
+

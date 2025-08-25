@@ -2,7 +2,7 @@
 {
     public interface IHttpHandlerChainBuilder
     {
-        HttpClient BuildClientWithHandlers(HttpClient baseClient, HttpClientFeatures features, string serviceName);
+        HttpClient BuildClientWithHandlers(HttpClient baseClient, /*HttpClientFeatures features, */string serviceName);
 
     }
 }
