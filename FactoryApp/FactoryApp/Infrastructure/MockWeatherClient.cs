@@ -6,7 +6,7 @@ namespace FactoryApp.Infrastructure;
 
 public class MockWeatherClient : IWeatherClient
 {
-    public async Task<Weather?> GetCurrentWeatherAsync(WeatherClientCreationRequest request)
+    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO request)
     {
         // Simulate API delay
         await Task.Delay(100);

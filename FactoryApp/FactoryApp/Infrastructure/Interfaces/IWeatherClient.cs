@@ -6,5 +6,4 @@ namespace FactoryApp.Infrastructure.Interfaces;
 public interface IWeatherClient
 {
     Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO request);
-    bool SupportsFeature(string feature);
 } 

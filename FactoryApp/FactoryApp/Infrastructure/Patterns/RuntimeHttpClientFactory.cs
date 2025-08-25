@@ -29,17 +29,17 @@ namespace FactoryApp.Infrastructure.Patterns
                 if (features.EnableCaching)
                     handlers.Add(ActivatorUtilities.CreateInstance<CachingHandler>(_sp));
 
-                if (features.EnableRetry)
-                    handlers.Add(ActivatorUtilities.CreateInstance<ResilientHandler>(_sp));
+                //if (features.EnableRetry)
+                //    handlers.Add(ActivatorUtilities.CreateInstance<ResilientHandler>(_sp));
 
-                if (features.EnableAuth)
-                    handlers.Add(ActivatorUtilities.CreateInstance<AuthHandler>(_sp));
+                //if (features.EnableAuth)
+                //    handlers.Add(ActivatorUtilities.CreateInstance<AuthHandler>(_sp));
 
-                if (features.EnableLogging)
-                    handlers.Add(ActivatorUtilities.CreateInstance<LoggingHandler>(_sp));
+                //if (features.EnableLogging)
+                //    handlers.Add(ActivatorUtilities.CreateInstance<LoggingHandler>(_sp));
 
-                if (features.EnableRateLimiting)
-                    handlers.Add(ActivatorUtilities.CreateInstance<RateLimitHandler>(_sp));
+                //if (features.EnableRateLimiting)
+                //    handlers.Add(ActivatorUtilities.CreateInstance<RateLimitHandler>(_sp));
 
                 if (!handlers.Any())
                     return client; // plain client

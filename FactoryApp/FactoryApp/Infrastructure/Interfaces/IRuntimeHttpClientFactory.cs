@@ -4,6 +4,6 @@ namespace FactoryApp.Infrastructure.Interfaces
 {
     public interface IRuntimeHttpClientFactory
     {
-        HttpClient Create(HttpClientFeatures features);
+        HttpClient Create(HttpClientFeatures features, WeatherClientCreationRequest request, WeatherServiceConfigAttribute config);
     }
 }
