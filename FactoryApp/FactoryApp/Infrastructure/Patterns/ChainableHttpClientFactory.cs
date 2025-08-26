@@ -67,8 +67,8 @@ namespace FactoryApp.Infrastructure.Patterns
             var activeConfigurators = new List<IHttpClientConfigurator>();
 
             // Order matters - logging should be outermost, then caching, then resilience
-            //if (features.EnableLogging && _configurators.ContainsKey("logging"))
-            //    activeConfigurators.Add(_configurators["logging"]);
+            if (features.EnableLogging && _configurators.ContainsKey("logging"))
+                activeConfigurators.Add(_configurators["logging"]);
 
             if (features.EnableCaching && _configurators.ContainsKey("caching"))
                 activeConfigurators.Add(_configurators["caching"]);
