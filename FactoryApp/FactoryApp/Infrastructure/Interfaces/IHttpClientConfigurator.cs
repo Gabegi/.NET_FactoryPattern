@@ -1,4 +1,4 @@
-﻿using FactoryApp.Application;
+﻿using FactoryApp.Application.WeatherService;
 
 namespace FactoryApp.Infrastructure.Interfaces
 {
@@ -7,7 +7,6 @@ namespace FactoryApp.Infrastructure.Interfaces
         void Configure(
             IHttpClientBuilder clientBuilder,
             IServiceCollection services,
-            WeatherRequest request,
-            WeatherServiceConfigAttribute config);
+            WeatherRequest request);
     }
 }

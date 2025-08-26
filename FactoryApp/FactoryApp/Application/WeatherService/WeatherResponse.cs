@@ -1,4 +1,4 @@
-﻿namespace FactoryApp.Application
+﻿namespace FactoryApp.Application.WeatherService
 {
     public class WeatherResponse
     {

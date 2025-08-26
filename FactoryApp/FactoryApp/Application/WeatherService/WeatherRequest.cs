@@ -1,4 +1,4 @@
-﻿namespace FactoryApp.Application
+﻿namespace FactoryApp.Application.WeatherService
 {
     public class WeatherRequest
     {
@@ -9,7 +9,8 @@
         public bool RequiresAuthentication { get; set; }
         public bool EnableCaching { get; set; } = true;
         public bool EnableRetryPolicy { get; set; } = true;
-        public int? CustomTimeoutSeconds { get; set; }
+        public bool EnableLogging { get; set; } = true;
+        public double CustomTimeoutSeconds { get; set; }
         public string? CustomUserAgent { get; set; }
         public List<string> RequiredFeatures { get; set; } = new();
     }

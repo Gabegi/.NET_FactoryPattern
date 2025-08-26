@@ -1,4 +1,4 @@
-﻿using FactoryApp.Application;
+﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Configurators;
 using FactoryApp.Infrastructure.Interfaces;
 
@@ -62,18 +62,18 @@ namespace FactoryApp.Infrastructure.Patterns
             client.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
         }
 
-        private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherServiceConfigAttribute features)
+        private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherRequest request)
         {
             var activeConfigurators = new List<IHttpClientConfigurator>();
 
             // Order matters - logging should be outermost, then caching, then resilience
-            if (features.EnableLogging && _configurators.ContainsKey("logging"))
+            if (request.EnableLogging && _configurators.ContainsKey("logging"))
                 activeConfigurators.Add(_configurators["logging"]);
 
-            if (features.EnableCaching && _configurators.ContainsKey("caching"))
+            if (request.EnableCaching && _configurators.ContainsKey("caching"))
                 activeConfigurators.Add(_configurators["caching"]);
 
-            if (features.EnableRetry && _configurators.ContainsKey("resilience"))
+            if (request.EnableRetry && _configurators.ContainsKey("resilience"))
                 activeConfigurators.Add(_configurators["resilience"]);
 
             return activeConfigurators;

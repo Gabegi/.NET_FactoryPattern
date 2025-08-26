@@ -1,4 +1,4 @@
-﻿using FactoryApp.Application;
+﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Configurators
@@ -8,8 +8,7 @@ namespace FactoryApp.Infrastructure.Configurators
         public void Configure(
             IHttpClientBuilder clientBuilder,
             IServiceCollection services,
-            WeatherRequest request,
-            WeatherServiceConfigAttribute config)
+            WeatherRequest request)
 
         {
             clientBuilder.AddStandardResilienceHandler(options =>

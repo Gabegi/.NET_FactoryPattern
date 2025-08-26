@@ -1,4 +1,4 @@
-﻿using FactoryApp.Application;
+﻿using FactoryApp.Application.WeatherService;
 
 namespace FactoryApp.Infrastructure.Interfaces;
 

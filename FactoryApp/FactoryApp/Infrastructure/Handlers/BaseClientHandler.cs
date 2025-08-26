@@ -1,4 +1,4 @@
-﻿using FactoryApp.Application;
+﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Handlers
@@ -16,13 +16,13 @@ namespace FactoryApp.Infrastructure.Handlers
             _httpClientFactory = httpClientFactory;
         }
 
-        public HttpClient CreateBaseClient(WeatherRequest request, WeatherServiceConfigAttribute config)
+        public HttpClient CreateBaseClient(WeatherRequest request)
         {
             _logger.LogInformation($"Creating WeatherClient for {request.ServiceName} ({request.Region}, {request.Environment})");
 
             var httpClient = _httpClientFactory.CreateClient("WeatherApi");
-            httpClient.BaseAddress = new Uri(config.BaseUrl);
-            httpClient.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
+            httpClient.BaseAddress = new Uri("");
+            httpClient.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
 
             return httpClient;
         }
