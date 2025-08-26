@@ -1,5 +1,5 @@
 ﻿
-using FactoryApp.Domain.Entities;
+using FactoryApp.Application;
 
 namespace FactoryApp.Infrastructure.Interfaces
 {

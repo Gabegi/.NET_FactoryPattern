@@ -1,4 +1,4 @@
-﻿using FactoryApp.Domain.Entities;
+﻿using FactoryApp.Application;
 using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Handlers

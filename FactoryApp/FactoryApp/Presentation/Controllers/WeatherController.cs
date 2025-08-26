@@ -1,5 +1,5 @@
 using FactoryApp.Application.UseCases;
-using FactoryApp.Domain.Entities;
+using FactoryApp.Domain;
 using FactoryApp.Presentation.DTOs;
 using Microsoft.AspNetCore.Mvc;
 

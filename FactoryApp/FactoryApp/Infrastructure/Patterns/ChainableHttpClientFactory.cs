@@ -1,4 +1,4 @@
-﻿using FactoryApp.Domain.Entities;
+﻿using FactoryApp.Application;
 using FactoryApp.Infrastructure.Configurators;
 using FactoryApp.Infrastructure.Interfaces;
 
@@ -25,7 +25,7 @@ namespace FactoryApp.Infrastructure.Patterns
             };
         }
 
-        public HttpClient Create(HttpClientFeatures features, WeatherClientCreationRequest request, WeatherServiceConfigAttribute config)
+        public HttpClient Create(WeatherServiceConfigAttribute features, WeatherClientCreationRequest request, WeatherServiceConfigAttribute config)
         {
             // Create a temporary service collection for dynamic client configuration
             var services = new ServiceCollection();
@@ -62,7 +62,7 @@ namespace FactoryApp.Infrastructure.Patterns
             client.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
         }
 
-        private List<IHttpClientConfigurator> GetActiveConfigurators(HttpClientFeatures features)
+        private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherServiceConfigAttribute features)
         {
             var activeConfigurators = new List<IHttpClientConfigurator>();
 

@@ -1,4 +1,4 @@
-﻿namespace FactoryApp.Domain.Entities
+﻿namespace FactoryApp.Application
 {
     public class WeatherClientCreationRequest
     {
