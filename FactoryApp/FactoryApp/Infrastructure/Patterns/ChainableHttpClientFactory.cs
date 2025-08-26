@@ -25,7 +25,7 @@ namespace FactoryApp.Infrastructure.Patterns
             };
         }
 
-        public HttpClient Create(WeatherServiceConfigAttribute features, WeatherClientCreationRequest request, WeatherServiceConfigAttribute config)
+        public HttpClient Create(WeatherServiceConfigAttribute features, WeatherRequest request, WeatherServiceConfigAttribute config)
         {
             // Create a temporary service collection for dynamic client configuration
             var services = new ServiceCollection();
@@ -51,7 +51,7 @@ namespace FactoryApp.Infrastructure.Patterns
             return factory.CreateClient("DynamicClient");
         }
 
-        private void ConfigureBaseClient(HttpClient client, WeatherClientCreationRequest request, WeatherServiceConfigAttribute config)
+        private void ConfigureBaseClient(HttpClient client, WeatherRequest request, WeatherServiceConfigAttribute config)
         {
             if (!string.IsNullOrEmpty(config.BaseUrl))
                 client.BaseAddress = new Uri(config.BaseUrl);

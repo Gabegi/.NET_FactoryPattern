@@ -8,7 +8,7 @@ namespace FactoryApp.Infrastructure.Configurators
         public void Configure(
             IHttpClientBuilder clientBuilder,
             IServiceCollection services,
-            WeatherClientCreationRequest request,
+            WeatherRequest request,
             WeatherServiceConfigAttribute config)
 
         {

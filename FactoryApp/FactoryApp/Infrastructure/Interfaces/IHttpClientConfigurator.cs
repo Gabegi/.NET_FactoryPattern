@@ -7,7 +7,7 @@ namespace FactoryApp.Infrastructure.Interfaces
         void Configure(
             IHttpClientBuilder clientBuilder,
             IServiceCollection services,
-            WeatherClientCreationRequest request,
+            WeatherRequest request,
             WeatherServiceConfigAttribute config);
     }
 }

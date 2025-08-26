@@ -16,7 +16,7 @@ namespace FactoryApp.Infrastructure.Handlers
             _httpClientFactory = httpClientFactory;
         }
 
-        public HttpClient CreateBaseClient(WeatherClientCreationRequest request, WeatherServiceConfigAttribute config)
+        public HttpClient CreateBaseClient(WeatherRequest request, WeatherServiceConfigAttribute config)
         {
             _logger.LogInformation($"Creating WeatherClient for {request.ServiceName} ({request.Region}, {request.Environment})");
 

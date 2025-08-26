@@ -1,4 +1,6 @@
-﻿namespace FactoryApp.Domain.Entities
+﻿using FactoryApp.Domain.Entities;
+
+namespace FactoryApp.Domain
 {
     public enum WeatherServiceType
     {

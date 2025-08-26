@@ -1,6 +1,6 @@
 ﻿namespace FactoryApp.Application
 {
-    public class WeatherClientCreationRequest
+    public class WeatherRequest
     {
         public string ServiceName { get; set; } = string.Empty;
 
