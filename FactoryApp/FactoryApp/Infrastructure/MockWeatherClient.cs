@@ -1,4 +1,4 @@
-using FactoryApp.Domain.Entities;
+using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Presentation.DTOs;
 
@@ -6,12 +6,12 @@ namespace FactoryApp.Infrastructure;
 
 public class MockWeatherClient : IWeatherClient
 {
-    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO request)
+    public async Task<WeatherResponse?> GetCurrentWeatherAsync(WeatherRequestDTO request)
     {
         // Simulate API delay
         await Task.Delay(100);
 
-        return new Weather
+        return new WeatherResponse
         {
             Latitude = 50,
             Longitude = 50,

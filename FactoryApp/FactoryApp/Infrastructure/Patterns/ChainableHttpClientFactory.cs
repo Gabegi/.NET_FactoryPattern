@@ -25,7 +25,7 @@ namespace FactoryApp.Infrastructure.Patterns
             };
         }
 
-        public HttpClient Create(WeatherServiceConfigAttribute features, WeatherRequest request, WeatherServiceConfigAttribute config)
+        public HttpClient Create(WeatherRequest request)
         {
             // Create a temporary service collection for dynamic client configuration
             var services = new ServiceCollection();
@@ -33,15 +33,15 @@ namespace FactoryApp.Infrastructure.Patterns
             // Start with base client configuration
             var clientBuilder = services.AddHttpClient("DynamicClient", client =>
             {
-                ConfigureBaseClient(client, request, config);
+                ConfigureBaseClient(client, request);
             });
 
             // Chain configurations based on features
-            var activeConfigurators = GetActiveConfigurators(features);
+            var activeConfigurators = GetActiveConfigurators(request);
 
             foreach (var configurator in activeConfigurators)
             {
-                configurator.Configure(clientBuilder, services, request, config);
+                configurator.Configure(clientBuilder, services, request);
             }
 
             // Build the service provider and create the client
@@ -51,15 +51,15 @@ namespace FactoryApp.Infrastructure.Patterns
             return factory.CreateClient("DynamicClient");
         }
 
-        private void ConfigureBaseClient(HttpClient client, WeatherRequest request, WeatherServiceConfigAttribute config)
+        private void ConfigureBaseClient(HttpClient client, WeatherRequest request)
         {
-            if (!string.IsNullOrEmpty(config.BaseUrl))
-                client.BaseAddress = new Uri(config.BaseUrl);
+            if (!string.IsNullOrEmpty(request.ServiceName))
+                client.BaseAddress = new Uri("");
 
             //if (!string.IsNullOrEmpty(request.ApiKey))
             //    client.DefaultRequestHeaders.Add("X-API-Key", request.ApiKey);
 
-            client.Timeout = TimeSpan.FromSeconds(config.TimeoutSeconds);
+            client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
         }
 
         private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherRequest request)
@@ -73,7 +73,7 @@ namespace FactoryApp.Infrastructure.Patterns
             if (request.EnableCaching && _configurators.ContainsKey("caching"))
                 activeConfigurators.Add(_configurators["caching"]);
 
-            if (request.EnableRetry && _configurators.ContainsKey("resilience"))
+            if (request.EnableRetryPolicy && _configurators.ContainsKey("resilience"))
                 activeConfigurators.Add(_configurators["resilience"]);
 
             return activeConfigurators;
