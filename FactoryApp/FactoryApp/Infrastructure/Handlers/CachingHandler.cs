@@ -6,42 +6,12 @@ using System.Net;
 using System.Text;
 
 namespace FactoryApp.Infrastructure.Handlers;
-
-public class CachingHandler : IHttpClientConfigurator
-{
-    public void Configure(
-        IHttpClientBuilder clientBuilder,
-        IServiceCollection services,
-        WeatherRequest request)
-    {
-        // Configure HybridCache
-        services.AddHybridCache(options =>
-        {
-            options.MaximumPayloadBytes = 1024 * 1024 * 10; // 10MB
-            options.MaximumKeyLength = 512;
-            options.DefaultEntryOptions = new HybridCacheEntryOptions
-            {
-                Expiration = TimeSpan.FromMinutes(30),
-                LocalCacheExpiration = TimeSpan.FromMinutes(30)
-            };
-        });
-
-        // Add handler to HTTP pipeline - AUTOMATIC caching
-        clientBuilder.AddHttpMessageHandler(provider =>
-        {
-            var cache = provider.GetRequiredService<HybridCache>();
-            return new HttpCachingHandler(cache, request.ServiceType);
-        });
-    }
-}
-
-
-public class HttpCachingHandler : DelegatingHandler
+public class CachingHandler : DelegatingHandler
 {
     private readonly HybridCache _cache;
     private readonly WeatherServiceType _serviceType;
 
-    public HttpCachingHandler(HybridCache cache, WeatherServiceType serviceType)
+    public CachingHandler(HybridCache cache, WeatherServiceType serviceType)
     {
         _cache = cache;
         _serviceType = serviceType;

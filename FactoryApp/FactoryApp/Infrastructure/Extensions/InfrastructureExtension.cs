@@ -1,4 +1,5 @@
-﻿using FactoryApp.Infrastructure.Handlers;
+﻿using FactoryApp.Infrastructure.Configuration;
+using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Http.Resilience;
@@ -10,9 +11,12 @@ namespace FactoryApp.Infrastructure.Extensions
     {
             public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
             {
-                
-                // Register the handlers
-                services.AddTransient<CachingHandler>();
+
+            // Register configurators
+            services.AddTransient<IHttpClientConfigurator, CachingConfigurator>();
+
+            // Register the handlers
+            services.AddTransient<CachingHandler>();
                 //services.AddTransient<IHttpClientConfigurator, ResilienceHandler>();
             services.AddTransient<LoggingHandler>();
 
