@@ -10,7 +10,7 @@ namespace FactoryApp.Infrastructure.Handlers
     {
         public void Configure(
             IHttpClientBuilder clientBuilder,
-            ServiceCollection services,
+            IServiceCollection services,
             WeatherRequest request)
         {
             // Ensure logging services are registered

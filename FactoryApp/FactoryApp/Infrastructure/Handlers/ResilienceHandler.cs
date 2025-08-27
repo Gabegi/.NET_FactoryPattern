@@ -7,7 +7,7 @@ namespace FactoryApp.Infrastructure.Handlers
     {
         public void Configure(
             IHttpClientBuilder clientBuilder,
-            ServiceCollection services,
+            IServiceCollection services,
             WeatherRequest request)
 
         {

@@ -11,7 +11,7 @@ public class CachingHandler : IHttpClientConfigurator
 {
     public void Configure(
         IHttpClientBuilder clientBuilder,
-        ServiceCollection services,
+        IServiceCollection services,
         WeatherRequest request)
     {
         // Configure HybridCache

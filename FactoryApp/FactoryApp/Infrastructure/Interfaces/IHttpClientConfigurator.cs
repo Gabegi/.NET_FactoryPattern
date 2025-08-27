@@ -7,7 +7,7 @@ namespace FactoryApp.Infrastructure.Interfaces
         // strategy pattern
         void Configure(
             IHttpClientBuilder clientBuilder,
-            ServiceCollection services,
+            IServiceCollection services,
             WeatherRequest request);
     }
 }
