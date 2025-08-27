@@ -45,7 +45,7 @@ namespace FactoryApp.Infrastructure.Patterns
             var tempServiceProvider = services.BuildServiceProvider();
             var factory = tempServiceProvider.GetRequiredService<IHttpClientFactory>();
 
-            return factory.CreateClient("DynamicClient");
+            return factory.CreateClient($"{request.ServiceName}_client");
         }
 
         
