@@ -1,4 +1,6 @@
-﻿namespace FactoryApp.Application.WeatherService
+﻿using FactoryApp.Domain;
+
+namespace FactoryApp.Application.WeatherService
 {
     public class WeatherRequest
     {
@@ -13,5 +15,6 @@
         public double CustomTimeoutSeconds { get; set; }
         public string? CustomUserAgent { get; set; }
         public List<string> RequiredFeatures { get; set; } = new();
+        public WeatherServiceType ServiceType { get; set; }
     }
 }
