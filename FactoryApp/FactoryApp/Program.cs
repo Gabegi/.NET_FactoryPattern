@@ -1,5 +1,6 @@
 using FactoryApp.Application.UseCases;
 using FactoryApp.Infrastructure;
+using FactoryApp.Infrastructure.Extensions;
 using FactoryApp.Infrastructure.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);

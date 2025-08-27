@@ -4,23 +4,13 @@ using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Http.Resilience;
 
 
-namespace FactoryApp.Infrastructure
+namespace FactoryApp.Infrastructure.Extensions
 {
     public static class InfrastructureExtension
     {
             public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
             {
-                // Configure HybridCache
-                services.AddHybridCache(options =>
-                {
-                    options.MaximumPayloadBytes = 1024 * 1024 * 10; // 10MB
-                    options.MaximumKeyLength = 512;
-                    options.DefaultEntryOptions = new HybridCacheEntryOptions
-                    {
-                        Expiration = TimeSpan.FromMinutes(30),
-                        LocalCacheExpiration = TimeSpan.FromMinutes(30)
-                    };
-                });
+                
 
                 services.AddHttpClient("ResilientClient")
                     .AddStandardResilienceHandler()
