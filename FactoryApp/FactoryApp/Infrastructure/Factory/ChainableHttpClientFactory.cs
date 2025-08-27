@@ -31,19 +31,14 @@ namespace FactoryApp.Infrastructure.Patterns
             var services = new ServiceCollection();
 
             // Start with base client configuration
-            var baseClient = _baseClient.CreateBaseClient(request);
-
-            var clientBuilder = services.AddHttpClient("DynamicClient", client =>
-            {
-                ConfigureBaseClient(client, request);
-            });
+            var clientBuilder = _baseClient.CreateBaseClient(request);
 
             // Chain configurations based on features
             var activeConfigurators = GetActiveConfigurators(request);
 
             foreach (var configurator in activeConfigurators)
             {
-                configurator.Configure(baseClient, services, request);
+                configurator.Configure(clientBuilder, services, request);
             }
 
             // Build the service provider and create the client
