@@ -1,5 +1,6 @@
 ﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Interfaces;
+using FactoryApp.Domain.Extensions;
 
 namespace FactoryApp.Infrastructure.Handlers
 {
@@ -30,7 +31,7 @@ namespace FactoryApp.Infrastructure.Handlers
         {
             var serviceConfig = request.ServiceType.GetServiceConfig();
 
-            client.BaseAddress = new Uri(request.ServiceName);
+            client.BaseAddress = new Uri(serviceConfig.Url);
             client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
         }
     }
