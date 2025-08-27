@@ -9,61 +9,65 @@ namespace FactoryApp.Infrastructure.Patterns
     {
         private readonly IBaseClient _baseClient;
         private readonly IServiceProvider _serviceProvider;
-        private readonly Dictionary<string, IHttpClientConfigurator> _configurators;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IEnumerable<IHttpClientConfigurator> _configurators;
+        ServiceCollection _services;
+
+
 
         public ChainableHttpClientFactory(
             IBaseClient baseClient,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            IHttpClientFactory httpClientFactory,
+            IEnumerable<IHttpClientConfigurator> configurators)
         {
             _baseClient = baseClient;
             _serviceProvider = serviceProvider;
-            _configurators = new Dictionary<string, IHttpClientConfigurator>
-            {
-                ["resilience"] = new ResilienceHandler(),
-                ["caching"] = new CachingHandler()
-            };
+            _httpClientFactory = httpClientFactory;
+            _configurators = configurators;
         }
 
         public HttpClient Create(WeatherRequest request)
         {
-            // Create a temporary service collection for dynamic client configuration
-            var services = new ServiceCollection();
 
             // Start with base client configuration
             var clientBuilder = _baseClient.CreateBaseClient(request);
 
-            // Chain configurations based on features
-            var activeConfigurators = GetActiveConfigurators(request);
-
-            foreach (var configurator in activeConfigurators)
+            //var configurations = GetActiveConfigurators(request);
+            if(request.EnableLogging is true)
             {
-                configurator.Configure(clientBuilder, services, request);
+                clientBuilder.AddHttpMessageHandler<LoggingHandler>();
+            }
+
+            if(request.EnableCaching is true)
+            {
+                clientBuilder.AddHttpMessageHandler<CachingHandler>();
             }
 
             // Build the service provider and create the client
-            var tempServiceProvider = services.BuildServiceProvider();
+            var tempServiceProvider = _services.BuildServiceProvider();
             var factory = tempServiceProvider.GetRequiredService<IHttpClientFactory>();
 
             return factory.CreateClient($"{request.ServiceName}_client");
         }
 
-        
 
-        private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherRequest request)
-        {
-            var activeConfigurators = new List<IHttpClientConfigurator>();
 
-            // Order matters - logging should be outermost, then caching, then resilience
-            if (request.EnableLogging && _configurators.ContainsKey("logging"))
-                activeConfigurators.Add(_configurators["logging"]);
+        //private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherRequest request)
+        //{
+        //    var activeConfigurators = new List<IHttpClientConfigurator>();
 
-            if (request.EnableCaching && _configurators.ContainsKey("caching"))
-                activeConfigurators.Add(_configurators["caching"]);
+        //    // Order matters - logging should be outermost, then caching, then resilience
+        //    if (request.EnableLogging)
+        //        activeConfigurators.Add(configurators["logging"]);
 
-            if (request.EnableRetryPolicy && _configurators.ContainsKey("resilience"))
-                activeConfigurators.Add(_configurators["resilience"]);
+        //    if (request.EnableCaching && _configurators.ContainsKey("caching"))
+        //        activeConfigurators.Add(_configurators["caching"]);
 
-            return activeConfigurators;
-        }
+        //    if (request.EnableRetryPolicy && _configurators.ContainsKey("resilience"))
+        //        activeConfigurators.Add(_configurators["resilience"]);
+
+        //    return activeConfigurators;
+        //}
     }
 }

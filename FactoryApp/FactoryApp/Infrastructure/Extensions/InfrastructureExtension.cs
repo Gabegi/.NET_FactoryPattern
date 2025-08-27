@@ -1,8 +1,5 @@
 ﻿using FactoryApp.Infrastructure.Configuration;
-using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
-using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.Http.Resilience;
 
 
 namespace FactoryApp.Infrastructure.Extensions
@@ -12,58 +9,11 @@ namespace FactoryApp.Infrastructure.Extensions
             public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
             {
 
-            // Register configurators
+            services.AddTransient<IHttpClientConfigurator, ResilienceConfigurator>();
             services.AddTransient<IHttpClientConfigurator, CachingConfigurator>();
 
-            // Register the handlers
-            services.AddTransient<CachingHandler>();
-                //services.AddTransient<IHttpClientConfigurator, ResilienceHandler>();
-            services.AddTransient<LoggingHandler>();
 
-                services.AddHttpClient(); // the "raw" factory
-
-
-                // HttpClient WITHOUT caching
-                services.AddHttpClient("WeatherApi", (serviceProvider, client) =>
-                {
-                    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-                    ConfigureWeatherClient(client, configuration);
-                });
-
-                // HttpClient WITH caching
-                services.AddHttpClient("WeatherApiCached", (serviceProvider, client) =>
-                {
-                    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-                    ConfigureWeatherClient(client, configuration);
-                })
-                .AddHttpMessageHandler<CachingHandler>(); // Add caching handler
-
-                return services;
-            }
-
-            private static void ConfigureWeatherClient(HttpClient client, IConfiguration configuration)
-            {
-                var timeoutSeconds = configuration.GetValue("WeatherApi:TimeoutSeconds", 30);
-                var userAgent = configuration.GetValue("WeatherApi:UserAgent", "WeatherApp/1.0");
-                var baseUrl = configuration.GetValue("WeatherApi:BaseUrl", "");
-
-                client.Timeout = TimeSpan.FromSeconds(timeoutSeconds);
-                client.DefaultRequestHeaders.Add("User-Agent", userAgent);
-
-                if (!string.IsNullOrEmpty(baseUrl))
-                {
-                    client.BaseAddress = new Uri(baseUrl);
-                }
-            }
-
-            public static IServiceCollection AddWeatherServices(this IServiceCollection services)
-            {
-                // Register your application services
-                services.AddScoped<IBaseClient, BaseClientHandler>();
-                //services.AddScoped<IWeatherClientFactory, WeatherClientFactory>();
-                services.AddScoped<IWeatherClient, OpenMeteoClient>();
-
-                return services;
+            return services;
             }
         }
     }

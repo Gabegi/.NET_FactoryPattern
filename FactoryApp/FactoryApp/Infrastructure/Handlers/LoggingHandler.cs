@@ -1,12 +1,11 @@
 ﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Domain;
 using FactoryApp.Domain.Extensions;
-using FactoryApp.Infrastructure.Interfaces;
 using System.Diagnostics;
 
 namespace FactoryApp.Infrastructure.Handlers
 {
-    public class LoggingHandler : IHttpClientConfigurator
+    public class LoggingHandler : DelegatingHandler
     {
         public void Configure(
             IHttpClientBuilder clientBuilder,
