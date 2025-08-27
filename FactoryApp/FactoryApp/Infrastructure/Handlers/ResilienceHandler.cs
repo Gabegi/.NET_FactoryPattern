@@ -1,9 +1,9 @@
 ﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Interfaces;
 
-namespace FactoryApp.Infrastructure.Configurators
+namespace FactoryApp.Infrastructure.Handlers
 {
-    public class ResilienceConfig : IHttpClientConfigurator
+    public class ResilienceHandler : IHttpClientConfigurator
     {
         public void Configure(
             IHttpClientBuilder clientBuilder,

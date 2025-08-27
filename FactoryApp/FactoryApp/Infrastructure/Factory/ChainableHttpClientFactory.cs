@@ -1,5 +1,5 @@
 ﻿using FactoryApp.Application.WeatherService;
-using FactoryApp.Infrastructure.Configurators;
+using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Patterns
@@ -19,7 +19,7 @@ namespace FactoryApp.Infrastructure.Patterns
             _serviceProvider = serviceProvider;
             _configurators = new Dictionary<string, IHttpClientConfigurator>
             {
-                ["resilience"] = new ResilienceConfig()
+                ["resilience"] = new ResilienceHandler()
                 //["caching"] = new CachingConfigurator(),
                 //["logging"] = new LoggingConfigurator()
             };
@@ -31,6 +31,8 @@ namespace FactoryApp.Infrastructure.Patterns
             var services = new ServiceCollection();
 
             // Start with base client configuration
+            var baseClient = _baseClient.CreateBaseClient(request);
+
             var clientBuilder = services.AddHttpClient("DynamicClient", client =>
             {
                 ConfigureBaseClient(client, request);
@@ -41,7 +43,7 @@ namespace FactoryApp.Infrastructure.Patterns
 
             foreach (var configurator in activeConfigurators)
             {
-                configurator.Configure(clientBuilder, services, request);
+                configurator.Configure(baseClient, services, request);
             }
 
             // Build the service provider and create the client
@@ -51,16 +53,7 @@ namespace FactoryApp.Infrastructure.Patterns
             return factory.CreateClient("DynamicClient");
         }
 
-        private void ConfigureBaseClient(HttpClient client, WeatherRequest request)
-        {
-            if (!string.IsNullOrEmpty(request.ServiceName))
-                client.BaseAddress = new Uri("");
-
-            //if (!string.IsNullOrEmpty(request.ApiKey))
-            //    client.DefaultRequestHeaders.Add("X-API-Key", request.ApiKey);
-
-            client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
-        }
+        
 
         private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherRequest request)
         {

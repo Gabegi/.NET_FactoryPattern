@@ -7,18 +7,27 @@ namespace FactoryApp.Infrastructure.Handlers
     {
         private readonly ILogger<BaseClientHandler> _logger;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ServiceCollection _services;
 
         public BaseClientHandler(
         ILogger<BaseClientHandler> logger,
-        IHttpClientFactory httpClientFactory)
+        IHttpClientFactory httpClientFactory,
+           ServiceCollection services)
         {
             _logger = logger;
             _httpClientFactory = httpClientFactory;
+            _services = services;
         }
 
-        public HttpClient CreateBaseClient(WeatherRequest request)
+        public IHttpClientBuilder CreateBaseClient(WeatherRequest request)
         {
-            _logger.LogInformation($"Creating WeatherClient for {request.ServiceName} ({request.Region}, {request.Environment})");
+            _logger.LogInformation($"Creating Client Builder for {request.ServiceName} ({request.Region}, {request.Environment})");
+
+            _services.AddHttpClient($"{request.ServiceName}", client =>
+            {
+                ConfigureBaseClient(client, request);
+            });
+
 
             var httpClient = _httpClientFactory.CreateClient("WeatherApi");
             httpClient.BaseAddress = new Uri("");
@@ -27,6 +36,16 @@ namespace FactoryApp.Infrastructure.Handlers
             return httpClient;
         }
 
+        private void ConfigureBaseClient(HttpClient client, WeatherRequest request)
+        {
+            if (!string.IsNullOrEmpty(request.ServiceName))
+                client.BaseAddress = new Uri("");
+
+            //if (!string.IsNullOrEmpty(request.ApiKey))
+            //    client.DefaultRequestHeaders.Add("X-API-Key", request.ApiKey);
+
+            client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
+        }
     }
 }
 
