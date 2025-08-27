@@ -1,7 +1,6 @@
 using FactoryApp.Application.WeatherService;
-using FactoryApp.Domain.Entities;
+using FactoryApp.Domain;
 using FactoryApp.Infrastructure.Interfaces;
-using FactoryApp.Presentation.DTOs;
 using System.Text.Json;
 
 namespace FactoryApp.Infrastructure;
@@ -56,9 +55,9 @@ public class OpenMeteoClient : IWeatherClient
     //    return result ?? throw new InvalidOperationException("Failed to deserialize weather response - received null");
     //}
 
-    public async Task<WeatherResponse?> GetCurrentWeatherAsync(WeatherRequest request)
+    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequest request)
     {
-        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ServiceName}, environment {requestDTO.Environment}");
+        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ServiceName}, environment {request.Environment}");
 
         try
         {
@@ -69,7 +68,7 @@ public class OpenMeteoClient : IWeatherClient
             response.EnsureSuccessStatusCode();
 
             var jsonString = await response.Content.ReadAsStringAsync();
-            var weather = JsonSerializer.Deserialize<WeatherResponse>(jsonString, new JsonSerializerOptions
+            var weather = JsonSerializer.Deserialize<Weather>(jsonString, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

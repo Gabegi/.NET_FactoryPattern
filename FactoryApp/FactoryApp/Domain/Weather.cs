@@ -1,4 +1,4 @@
-namespace DependencyInjectionApp.Domain.Entities;
+namespace FactoryApp.Domain;
 
 public class Weather
 {

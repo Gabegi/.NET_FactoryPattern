@@ -1,17 +1,17 @@
 using FactoryApp.Application.WeatherService;
+using FactoryApp.Domain;
 using FactoryApp.Infrastructure.Interfaces;
-using FactoryApp.Presentation.DTOs;
 
 namespace FactoryApp.Infrastructure;
 
 public class MockWeatherClient : IWeatherClient
 {
-    public async Task<WeatherResponse?> GetCurrentWeatherAsync(WeatherRequestDTO request)
+    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequest request)
     {
         // Simulate API delay
         await Task.Delay(100);
 
-        return new WeatherResponse
+        return new Weather
         {
             Latitude = 50,
             Longitude = 50,

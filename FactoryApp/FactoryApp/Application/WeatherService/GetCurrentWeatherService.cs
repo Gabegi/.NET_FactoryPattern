@@ -1,5 +1,5 @@
 using FactoryApp.Application.WeatherService;
-using FactoryApp.Domain.Entities;
+using FactoryApp.Domain;
 using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Presentation.DTOs;
 
@@ -16,7 +16,7 @@ public class GetCurrentWeatherService
 
     // TO DO: Add mapping + validating + other logic here
     // TO DO: Use WeatherRequestDTO
-    public async Task<WeatherResponse?> GetWeatherAsync(WeatherRequestDTO request)
+    public async Task<Weather?> GetWeatherAsync(WeatherRequest request)
     {
         return await _weatherClient.GetCurrentWeatherAsync(request);
 
