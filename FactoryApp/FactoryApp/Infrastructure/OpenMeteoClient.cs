@@ -1,97 +1,92 @@
-//using FactoryApp.Domain.Entities;
-//using FactoryApp.Infrastructure.Interfaces;
-//using FactoryApp.Presentation.DTOs;
-//using System.Text.Json;
+using FactoryApp.Application.WeatherService;
+using FactoryApp.Domain.Entities;
+using FactoryApp.Infrastructure.Interfaces;
+using FactoryApp.Presentation.DTOs;
+using System.Text.Json;
 
-//namespace FactoryApp.Infrastructure;
+namespace FactoryApp.Infrastructure;
 
-//public class OpenMeteoClient : IWeatherClient
-//{
-//    private readonly HttpClient _httpClient;
-//    private readonly IWeatherClientFactory _weatherServiceFactory;
-//    private readonly ILogger<OpenMeteoClient> _logger;
-//    //private readonly IRuntimeHttpClientFactory _factory;
+public class OpenMeteoClient : IWeatherClient
+{
+    private readonly HttpClient _httpClient;
+    private readonly IWeatherClientFactory _weatherServiceFactory;
+    private readonly ILogger<OpenMeteoClient> _logger;
+    //private readonly IRuntimeHttpClientFactory _factory;
 
-//    public OpenMeteoClient(
-//        IHttpClientFactory httpClientFactory,
-//        IWeatherClientFactory weatherServiceFactory,
-//        ILogger<OpenMeteoClient> logger
-//        /*IRuntimeHttpClientFactory factory*/)
-//    {
-//        _httpClient = httpClientFactory.CreateClient("WeatherApi");
-//        _weatherServiceFactory = weatherServiceFactory;
-//        _logger = logger;
-//        //_factory = factory;
-//    }
-//    //public async Task RunAsync(HttpClientFeatures features)
-//    //{
-//    //    var client = _factory.Create(features);
-//    //    var response = await client.GetAsync("https://api.example.com/data");
-//    //    response.EnsureSuccessStatusCode();
-//    //}
+    public OpenMeteoClient(
+        IHttpClientFactory httpClientFactory,
+        IWeatherClientFactory weatherServiceFactory,
+        ILogger<OpenMeteoClient> logger
+        /*IRuntimeHttpClientFactory factory*/)
+    {
+        _httpClient = httpClientFactory.CreateClient("WeatherApi");
+        _weatherServiceFactory = weatherServiceFactory;
+        _logger = logger;
+        //_factory = factory;
+    }
+    //public async Task RunAsync(HttpClientFeatures features)
+    //{
+    //    var client = _factory.Create(features);
+    //    var response = await client.GetAsync("https://api.example.com/data");
+    //    response.EnsureSuccessStatusCode();
+    //}
 
 
 
-//    ///// <summary>
-//    ///// </summary>
-//    ///// <param name="request"></param>
-//    ///// <returns></returns>
-//    ///// <exception cref="InvalidOperationException"></exception>
-//    //public async Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request)
-//    //{
-//    //    var httpClient = CreateBaseClient(request);
-//    //    var url = _configuration["WeatherApi:Url"] ?? throw new InvalidOperationException("WeatherApi:Url not found in appsettings");
+    ///// <summary>
+    ///// </summary>
+    ///// <param name="request"></param>
+    ///// <returns></returns>
+    ///// <exception cref="InvalidOperationException"></exception>
+    //public async Task<WeatherResponseDTO> GetForecastAsync(WeatherClientCreationRequest request)
+    //{
+    //    var httpClient = CreateBaseClient(request);
+    //    var url = _configuration["WeatherApi:Url"] ?? throw new InvalidOperationException("WeatherApi:Url not found in appsettings");
 
-//    //    var response = await httpClient.GetAsync(url);
+    //    var response = await httpClient.GetAsync(url);
 
-//    //    response.EnsureSuccessStatusCode();
-//    //    var content = await response.Content.ReadAsStreamAsync();
+    //    response.EnsureSuccessStatusCode();
+    //    var content = await response.Content.ReadAsStreamAsync();
 
-//    //    var result = JsonSerializer.Deserialize<WeatherResponseDTO?>(content, new JsonSerializerOptions
-//    //    {
-//    //        PropertyNameCaseInsensitive = true
-//    //    });
+    //    var result = JsonSerializer.Deserialize<WeatherResponseDTO?>(content, new JsonSerializerOptions
+    //    {
+    //        PropertyNameCaseInsensitive = true
+    //    });
 
-//    //    return result ?? throw new InvalidOperationException("Failed to deserialize weather response - received null");
-//    //}
+    //    return result ?? throw new InvalidOperationException("Failed to deserialize weather response - received null");
+    //}
 
-//    public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequestDTO requestDTO)
-//    {
-//        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {requestDTO.ServiceName}, environment {requestDTO.Environment}");
+    public async Task<WeatherResponse?> GetCurrentWeatherAsync(WeatherRequest request)
+    {
+        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ServiceName}, environment {requestDTO.Environment}");
 
-//        try
-//        {
-//            var request = new WeatherClientCreationRequest
-//            {
-//                ServiceName = requestDTO.ServiceName,
-//                Environment = requestDTO.Environment,
+        try
+        {
 
-//            };
+            var url = "";
 
-//            var url = "";
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
 
-//            var response = await _httpClient.GetAsync(url);
-//            response.EnsureSuccessStatusCode();
-            
-//            var jsonString = await response.Content.ReadAsStringAsync();
-//            var weather = JsonSerializer.Deserialize<Weather>(jsonString, new JsonSerializerOptions
-//            {
-//                PropertyNameCaseInsensitive = true
-//            });
-            
-//            _logger.LogInformation("Successfully retrieved weather data for coordinates");
-            
-//            return weather;
-//        }
-//        catch (HttpRequestException ex)
-//        {
-//            _logger.LogError(ex, "Error fetching weather data from Open-Meteo API for coordinates");
-//            return null;
-//        }
-//        catch (JsonException ex)
-//        {
-//            _logger.LogError(ex, "Error deserializing weather data for coordinates");
-//            return null;
-//        }
-//    }
-//} 
+            var jsonString = await response.Content.ReadAsStringAsync();
+            var weather = JsonSerializer.Deserialize<WeatherResponse>(jsonString, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            _logger.LogInformation("Successfully retrieved weather data for coordinates");
+
+            return weather;
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Error fetching weather data from Open-Meteo API for coordinates");
+            return null;
+        }
+        catch (JsonException ex)
+        {
+            _logger.LogError(ex, "Error deserializing weather data for coordinates");
+            return null;
+        }
+    }
+}
