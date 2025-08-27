@@ -1,4 +1,5 @@
 using FactoryApp.Application.UseCases;
+using FactoryApp.Application.WeatherService;
 using FactoryApp.Domain;
 using FactoryApp.Presentation.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -29,11 +30,10 @@ public class WeatherController : ControllerBase
     {
         try
         {
-            var request = new WeatherRequestDTO
+            var request = new WeatherRequest
             {
                 ServiceName = serviceType.ToString(),
-                Environment = environment,
-                User = user
+                Environment = environment
             };
 
             var response = await _weatherService.GetWeatherAsync(request);
@@ -46,7 +46,7 @@ public class WeatherController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to get weather for service: {ServiceName}");
+            _logger.LogError(ex, $"Failed to get weather for service: {serviceType}");
             return StatusCode(500, new { error = "Internal server error occurred" });
         }
     }
