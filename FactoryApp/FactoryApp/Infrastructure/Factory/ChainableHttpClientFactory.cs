@@ -19,9 +19,8 @@ namespace FactoryApp.Infrastructure.Patterns
             _serviceProvider = serviceProvider;
             _configurators = new Dictionary<string, IHttpClientConfigurator>
             {
-                ["resilience"] = new ResilienceHandler()
-                //["caching"] = new CachingConfigurator(),
-                //["logging"] = new LoggingConfigurator()
+                ["resilience"] = new ResilienceHandler(),
+                ["caching"] = new CachingHandler()
             };
         }
 
