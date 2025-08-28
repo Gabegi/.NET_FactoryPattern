@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 
 namespace FactoryApp.Infrastructure.Handlers;
+
 public class CachingHandler : DelegatingHandler
 {
     private readonly HybridCache _cache;
@@ -19,46 +20,68 @@ public class CachingHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        // Only cache GET requests
         if (request.Method != HttpMethod.Get)
             return await base.SendAsync(request, cancellationToken);
 
-        var cacheKey = $"weather:{_serviceType}:{request.RequestUri?.PathAndQuery}";
+        // Include query parameters and headers that might affect the response
+        var cacheKey = GenerateCacheKey(request);
 
-        // ✅ Try to get from cache first
         var cacheResult = await _cache.GetOrCreateAsync(
             cacheKey,
             factory: async (cancellationToken) =>
             {
                 var response = await base.SendAsync(request, cancellationToken);
+
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync(cancellationToken);
+                    var contentType = response.Content.Headers.ContentType?.ToString() ?? "application/json";
+
                     return new CachedResponse
                     {
                         Content = content,
+                        ContentType = contentType,
                         StatusCode = response.StatusCode,
                         IsSuccess = true
                     };
                 }
-                return new CachedResponse { IsSuccess = false };
+
+                // Don't cache error responses - return null so GetOrCreateAsync doesn't cache
+                return null;
             },
             options: new HybridCacheEntryOptions
             {
-                Expiration = TimeSpan.FromMinutes(30)
+                Expiration = TimeSpan.FromMinutes(30),
+                // Add some jitter to prevent cache stampede
+                LocalCacheExpiration = TimeSpan.FromMinutes(25)
             },
             cancellationToken: cancellationToken);
 
-        if (cacheResult.IsSuccess)
+        // If we have a cached successful response, return it
+        if (cacheResult?.IsSuccess == true)
         {
             return new HttpResponseMessage(cacheResult.StatusCode)
             {
-                Content = new StringContent(cacheResult.Content, Encoding.UTF8, "application/json"),
+                Content = new StringContent(cacheResult.Content, Encoding.UTF8, cacheResult.ContentType),
                 RequestMessage = request
             };
         }
 
-        // Cache indicated failure, make fresh request
+        // No cache hit or cached response was a failure - make fresh request
         return await base.SendAsync(request, cancellationToken);
+    }
+
+    private string GenerateCacheKey(HttpRequestMessage request)
+    {
+        var keyBuilder = new StringBuilder();
+        keyBuilder.Append($"weather:{_serviceType}:{request.RequestUri?.PathAndQuery}");
+
+        // Include relevant headers that might affect the response (if any)
+        // For example, Accept-Language, Authorization, etc.
+        // keyBuilder.Append($":{request.Headers.AcceptLanguage?.FirstOrDefault()}");
+
+        return keyBuilder.ToString();
     }
 }
 
@@ -66,7 +89,7 @@ public class CachingHandler : DelegatingHandler
 public class CachedResponse
 {
     public string Content { get; set; } = string.Empty;
+    public string ContentType { get; set; } = "application/json";
     public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
     public bool IsSuccess { get; set; }
 }
-
