@@ -12,7 +12,6 @@ builder.Services.AddSwaggerGen();
 
 // Add weather-related services using extension methods
 builder.Services.AddWeatherHttpClients();  // This adds both HttpClients and caching
-builder.Services.AddWeatherServices();     // This adds your business services
 
 // Register weather services
 builder.Services.AddScoped<MockWeatherClient>();

@@ -4,7 +4,7 @@ using FactoryApp.Domain.Extensions;
 
 namespace FactoryApp.Infrastructure.Handlers
 {
-    public class BaseClientHandler : IBaseClient
+    public class BaseClientHandler : IBaseClientHandler
     {
         private readonly ILogger<BaseClientHandler> _logger;
         private readonly ServiceCollection _services;

@@ -1,27 +1,20 @@
 ﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
-using Microsoft.Extensions.Http.Resilience;
 
 namespace FactoryApp.Infrastructure.Patterns
 {
-    public class ChainableHttpClientFactory : IChainableHttpClientFactory
+    public class ClientFactory : IClientFactory
     {
-        private readonly IBaseClient _baseClient;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IBaseClientHandler _baseClient;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IEnumerable<IHttpClientConfigurator> _configurators;
 
-        public ChainableHttpClientFactory(
-            IBaseClient baseClient,
-            IServiceProvider serviceProvider,
-            IHttpClientFactory httpClientFactory,
-            IEnumerable<IHttpClientConfigurator> configurators)
+        public ClientFactory(
+            IBaseClientHandler baseClient,
+            IHttpClientFactory httpClientFactory)
         {
             _baseClient = baseClient;
-            _serviceProvider = serviceProvider;
             _httpClientFactory = httpClientFactory;
-            _configurators = configurators;
         }
 
         public HttpClient Create(WeatherRequest request)

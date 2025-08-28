@@ -2,7 +2,7 @@
 
 namespace FactoryApp.Infrastructure.Interfaces
 {
-    public interface IChainableHttpClientFactory
+    public interface IClientFactory
     {
         HttpClient Create(WeatherRequest request);
     }

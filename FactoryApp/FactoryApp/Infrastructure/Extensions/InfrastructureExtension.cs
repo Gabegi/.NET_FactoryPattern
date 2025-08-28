@@ -1,28 +1,29 @@
-﻿using FactoryApp.Infrastructure.Configuration;
-using FactoryApp.Infrastructure.Handlers;
+﻿using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
-
+using FactoryApp.Infrastructure.Patterns;
 
 namespace FactoryApp.Infrastructure.Extensions
 {
     public static class InfrastructureExtension
     {
-            public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
-            {
+        public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
+        {
+            // Add required dependencies
+            services.AddHttpClient();
+            services.AddLogging();
+            services.AddHybridCache(); // Required for CachingHandler
 
-            // configs
-            services.AddTransient<IHttpClientConfigurator, ResilienceConfigurator>();
-            services.AddTransient<IHttpClientConfigurator, CachingConfigurator>();
 
-
-            // handlers
+            // Add handlers
             services.AddTransient<BaseClientHandler>();
             services.AddTransient<CachingHandler>();
             services.AddTransient<LoggingHandler>();
 
+            // Add core infrastructure services
+            services.AddTransient<IBaseClientHandler, BaseClientHandler>(); 
+            services.AddTransient<IClientFactory, ClientFactory>();
 
             return services;
-            }
         }
     }
-
+}
