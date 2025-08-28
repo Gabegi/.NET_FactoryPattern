@@ -5,16 +5,12 @@ using Microsoft.Extensions.Http.Resilience;
 
 namespace FactoryApp.Infrastructure.Patterns
 {
-    // Main factory implementation
     public class ChainableHttpClientFactory : IChainableHttpClientFactory
     {
         private readonly IBaseClient _baseClient;
         private readonly IServiceProvider _serviceProvider;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IEnumerable<IHttpClientConfigurator> _configurators;
-        ServiceCollection _services;
-
-
 
         public ChainableHttpClientFactory(
             IBaseClient baseClient,
@@ -30,22 +26,22 @@ namespace FactoryApp.Infrastructure.Patterns
 
         public HttpClient Create(WeatherRequest request)
         {
+            var clientName = $"{request.ServiceName}_client";
 
             // Start with base client configuration
             var clientBuilder = _baseClient.CreateBaseClient(request);
 
-            //var configurations = GetActiveConfigurators(request);
-            if(request.EnableLogging is true)
+            if (request.EnableLogging is true)
             {
                 clientBuilder.AddHttpMessageHandler<LoggingHandler>();
             }
 
-            if(request.EnableCaching is true)
+            if (request.EnableCaching is true)
             {
                 clientBuilder.AddHttpMessageHandler<CachingHandler>();
             }
 
-            if(request.EnableResilience)
+            if (request.EnableResilience)
             {
                 clientBuilder.AddStandardResilienceHandler(options =>
                 {
@@ -60,11 +56,8 @@ namespace FactoryApp.Infrastructure.Patterns
                 });
             }
 
-            // Build the service provider and create the client
-            var tempServiceProvider = _services.BuildServiceProvider();
-            var factory = tempServiceProvider.GetRequiredService<IHttpClientFactory>();
-
-            return factory.CreateClient($"{request.ServiceName}_client");
+            // Use the injected factory to create the client
+            return _httpClientFactory.CreateClient(clientName);
         }
     }
 }
