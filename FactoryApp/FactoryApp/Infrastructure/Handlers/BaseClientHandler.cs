@@ -21,7 +21,7 @@ namespace FactoryApp.Infrastructure.Handlers
         {
             _logger.LogInformation($"Creating Client Builder for {request.ServiceName} ({request.Region}, {request.Environment})");
 
-            return _services.AddHttpClient($"{request.ServiceName}", client =>
+            return _services.AddHttpClient($"{request.ServiceName}_client", client =>
             {
                 ConfigureBaseClient(client, request);
             });
@@ -30,6 +30,16 @@ namespace FactoryApp.Infrastructure.Handlers
         private void ConfigureBaseClient(HttpClient client, WeatherRequest request)
         {
             var serviceConfig = request.ServiceType.GetServiceConfig();
+
+            if (serviceConfig == null)
+            {
+                throw new ArgumentNullException(nameof(serviceConfig), "Service configuration cannot be null.");
+            }
+
+            if (serviceConfig.Url == null)
+            {
+                throw new ArgumentNullException(nameof(serviceConfig.Url), "Service URL cannot be null.");
+            }
 
             client.BaseAddress = new Uri(serviceConfig.Url);
             client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
