@@ -1,58 +1,23 @@
 ﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Domain;
-using FactoryApp.Domain.Extensions;
 using System.Diagnostics;
 
 namespace FactoryApp.Infrastructure.Handlers
 {
     public class LoggingHandler : DelegatingHandler
     {
-        public void Configure(
-            IHttpClientBuilder clientBuilder,
-            IServiceCollection services,
-            WeatherRequest request)
-        {
-            // Ensure logging services are registered
-            if (!services.Any(s => s.ServiceType == typeof(ILoggerFactory)))
-            {
-                services.AddLogging(builder =>
-                {
-                    builder.AddConsole();
-                    builder.AddDebug();
-
-                    // Different log levels based on environment
-                    var config = request.ServiceType.GetServiceConfig();
-                    var logLevel = config.Environment == "prod"
-                        ? LogLevel.Information
-                        : LogLevel.Debug;
-
-                    builder.SetMinimumLevel(logLevel);
-                });
-            }
-
-            // Add custom logging handler to HTTP pipeline
-            clientBuilder.AddHttpMessageHandler(provider =>
-            {
-                var logger = provider.GetRequiredService<ILogger<HttpLoggingHandler>>();
-                return new HttpLoggingHandler(logger, request.ServiceType);
-            });
-        }
-    }
-
-    public class HttpLoggingHandler : DelegatingHandler
-    {
-        private readonly ILogger<HttpLoggingHandler> _logger;
+        private readonly ILogger<LoggingHandler> _logger;
         private readonly WeatherServiceType _serviceType;
 
-        public HttpLoggingHandler(ILogger<HttpLoggingHandler> logger, WeatherServiceType serviceType)
+        public LoggingHandler(ILogger<LoggingHandler> logger, WeatherServiceType serviceType)
         {
             _logger = logger;
             _serviceType = serviceType;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(
-        HttpRequestMessage request,
-        CancellationToken cancellationToken)
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
             var stopwatch = Stopwatch.StartNew();
             var requestId = Guid.NewGuid().ToString("N")[..8];
