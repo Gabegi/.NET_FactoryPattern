@@ -1,6 +1,4 @@
-﻿using FactoryApp.Application.WeatherService;
-using FactoryApp.Domain;
-using FactoryApp.Infrastructure.Interfaces;
+﻿using FactoryApp.Domain;
 using Microsoft.Extensions.Caching.Hybrid;
 using System.Net;
 using System.Text;

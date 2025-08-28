@@ -7,7 +7,7 @@ namespace FactoryApp.Infrastructure.Configuration
     {
         public void Configure(IHttpClientBuilder clientBuilder, WeatherRequest request)
         {
-            if (!request.EnableRetryPolicy) return;
+            if (!request.EnableResilience) return;
 
             clientBuilder.AddStandardResilienceHandler(options =>
             {

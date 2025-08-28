@@ -10,7 +10,7 @@ namespace FactoryApp.Application.WeatherService
         public string Region { get; set; } = string.Empty;
         public bool RequiresAuthentication { get; set; }
         public bool EnableCaching { get; set; } = true;
-        public bool EnableRetryPolicy { get; set; } = true;
+        public bool EnableResilience { get; set; } = true;
         public bool EnableLogging { get; set; } = true;
         public double CustomTimeoutSeconds { get; set; }
         public string? CustomUserAgent { get; set; }

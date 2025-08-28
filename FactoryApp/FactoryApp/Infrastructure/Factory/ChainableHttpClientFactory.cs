@@ -1,6 +1,7 @@
 ﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
+using Microsoft.Extensions.Http.Resilience;
 
 namespace FactoryApp.Infrastructure.Patterns
 {
@@ -44,30 +45,16 @@ namespace FactoryApp.Infrastructure.Patterns
                 clientBuilder.AddHttpMessageHandler<CachingHandler>();
             }
 
+            if(request.EnableResilience)
+            {
+                clientBuilder.AddHttpMessageHandler<CustomResilienceHandler>();
+            }
+
             // Build the service provider and create the client
             var tempServiceProvider = _services.BuildServiceProvider();
             var factory = tempServiceProvider.GetRequiredService<IHttpClientFactory>();
 
             return factory.CreateClient($"{request.ServiceName}_client");
         }
-
-
-
-        //private List<IHttpClientConfigurator> GetActiveConfigurators(WeatherRequest request)
-        //{
-        //    var activeConfigurators = new List<IHttpClientConfigurator>();
-
-        //    // Order matters - logging should be outermost, then caching, then resilience
-        //    if (request.EnableLogging)
-        //        activeConfigurators.Add(configurators["logging"]);
-
-        //    if (request.EnableCaching && _configurators.ContainsKey("caching"))
-        //        activeConfigurators.Add(_configurators["caching"]);
-
-        //    if (request.EnableRetryPolicy && _configurators.ContainsKey("resilience"))
-        //        activeConfigurators.Add(_configurators["resilience"]);
-
-        //    return activeConfigurators;
-        //}
     }
 }
