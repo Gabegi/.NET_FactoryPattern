@@ -1,49 +1,38 @@
 ﻿using FactoryApp.Application.WeatherService;
-using FactoryApp.Infrastructure.Interfaces;
 using FactoryApp.Domain.Extensions;
+using FactoryApp.Infrastructure.Interfaces;
 
-namespace FactoryApp.Infrastructure.Handlers
+public class BaseClientHandler : IBaseClientHandler
 {
-    public class BaseClientHandler : IBaseClientHandler
+    private readonly ILogger<BaseClientHandler> _logger;
+
+    public BaseClientHandler(ILogger<BaseClientHandler> logger)
     {
-        private readonly ILogger<BaseClientHandler> _logger;
-        private readonly ServiceCollection _services;
+        _logger = logger;
+    }
 
-        public BaseClientHandler(
-        ILogger<BaseClientHandler> logger,
-           ServiceCollection services)
+    public IHttpClientBuilder CreateBaseClient(IServiceCollection services, WeatherRequest request)
+    {
+        _logger.LogInformation($"Creating Client Builder for {request.ServiceName} ({request.Region}, {request.Environment})");
+
+        return services.AddHttpClient($"{request.ServiceName}_client", client =>
         {
-            _logger = logger;
-            _services = services;
-        }
+            ConfigureBaseClient(client, request);
+        });
+    }
 
-        public IHttpClientBuilder CreateBaseClient(WeatherRequest request)
-        {
-            _logger.LogInformation($"Creating Client Builder for {request.ServiceName} ({request.Region}, {request.Environment})");
+    private void ConfigureBaseClient(HttpClient client, WeatherRequest request)
+    {
+        var serviceConfig = request.ServiceType.GetServiceConfig();
 
-            return _services.AddHttpClient($"{request.ServiceName}_client", client =>
-            {
-                ConfigureBaseClient(client, request);
-            });
-        }
+        if (string.IsNullOrEmpty(serviceConfig.Url))
+            throw new ArgumentNullException(nameof(serviceConfig.Url), "Service URL cannot be null.");
 
-        private void ConfigureBaseClient(HttpClient client, WeatherRequest request)
-        {
-            var serviceConfig = request.ServiceType.GetServiceConfig();
+        client.BaseAddress = new Uri(serviceConfig.Url +
+            $"?latitude={serviceConfig.Latitude}&longitude={serviceConfig.Longitude}&current_weather=true");
 
-            if (serviceConfig == null)
-            {
-                throw new ArgumentNullException(nameof(serviceConfig), "Service configuration cannot be null.");
-            }
-
-            if (serviceConfig.Url == null)
-            {
-                throw new ArgumentNullException(nameof(serviceConfig.Url), "Service URL cannot be null.");
-            }
-           
-            client.BaseAddress = new Uri(serviceConfig.Url + $"?latitude={serviceConfig.Latitude}&longitude={serviceConfig.Longitude}&current_weather=true");
-            client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
-        }
+        client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds > 0
+            ? request.CustomTimeoutSeconds
+            : serviceConfig.TimeoutSecond);
     }
 }
-

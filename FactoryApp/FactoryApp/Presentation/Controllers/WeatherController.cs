@@ -35,7 +35,7 @@ public class WeatherController : ControllerBase
                 Environment = environment
             };
 
-            var response = await _weatherService.GetWeatherAsync(request);
+            var response = await _weatherService.GetCurrentWeatherAsync(request);
             return Ok(response);
         }
         catch (ArgumentException ex)

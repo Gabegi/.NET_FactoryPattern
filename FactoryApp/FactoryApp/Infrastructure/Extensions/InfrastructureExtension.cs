@@ -15,7 +15,6 @@ namespace FactoryApp.Infrastructure.Extensions
 
 
             // Add handlers
-            services.AddTransient<BaseClientHandler>();
             services.AddTransient<CachingHandler>();
             services.AddTransient<LoggingHandler>();
 
