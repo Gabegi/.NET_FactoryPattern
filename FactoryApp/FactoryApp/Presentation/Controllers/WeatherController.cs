@@ -1,7 +1,6 @@
 using FactoryApp.Application.UseCases;
 using FactoryApp.Application.WeatherService;
 using FactoryApp.Domain;
-using FactoryApp.Presentation.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FactoryApp.Presentation.Controllers;

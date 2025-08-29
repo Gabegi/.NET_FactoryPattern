@@ -40,8 +40,8 @@ namespace FactoryApp.Infrastructure.Handlers
             {
                 throw new ArgumentNullException(nameof(serviceConfig.Url), "Service URL cannot be null.");
             }
-
-            client.BaseAddress = new Uri(serviceConfig.Url);
+           
+            client.BaseAddress = new Uri(serviceConfig.Url + $"?latitude={serviceConfig.Latitude}&longitude={serviceConfig.Longitude}&current_weather=true");
             client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds);
         }
     }

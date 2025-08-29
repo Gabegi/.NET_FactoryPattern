@@ -27,7 +27,8 @@ public class OpenMeteoClient : IWeatherClient
 
         try
         {
-            var response = await httpClient.GetAsync();
+            // Url defined in the factory
+            var response = await httpClient.GetAsync("");
             response.EnsureSuccessStatusCode();
 
             var jsonString = await response.Content.ReadAsStringAsync();
@@ -41,14 +42,15 @@ public class OpenMeteoClient : IWeatherClient
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, "Error fetching weather data from Open-Meteo API for coordinates ({Latitude}, {Longitude})",
-                request.Latitude, request.Longitude);
+            _logger.LogError(ex, $"Error fetching weather data from Open-Meteo API for service {request.ServiceName}");
+
             return null;
         }
         catch (JsonException ex)
         {
-            _logger.LogError(ex, "Error deserializing weather data for coordinates ({Latitude}, {Longitude})",
-                request.Latitude, request.Longitude);
+            _logger.LogError(ex, $"Error deserializing weather data for service {request.ServiceName}");
+
             return null;
         }
     }
+}
