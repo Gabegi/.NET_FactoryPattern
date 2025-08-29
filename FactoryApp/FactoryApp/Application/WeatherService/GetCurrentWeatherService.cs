@@ -4,7 +4,7 @@ using FactoryApp.Presentation.DTOs;
 
 namespace FactoryApp.Application.UseCases;
 
-public class GetCurrentWeatherService : IWeatherService
+public class GetCurrentWeatherService: IWeatherService
 {
     private readonly IWeatherClient _weatherClient;
 

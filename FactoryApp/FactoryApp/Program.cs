@@ -13,11 +13,13 @@ builder.Services.AddSwaggerGen();
 // Add weather-related services using extension methods
 builder.Services.AddWeatherHttpClients();  // This adds both HttpClients and caching
 
+// Register use case
+builder.Services.AddScoped<IWeatherService, GetCurrentWeatherService>();
+
 // Register weather services
 builder.Services.AddScoped<IWeatherClient, OpenMeteoClient>();
 
-// Register use case
-builder.Services.AddScoped<IWeatherService, GetCurrentWeatherService>();
+
 
 // Register logging
 builder.Services.AddLogging();
