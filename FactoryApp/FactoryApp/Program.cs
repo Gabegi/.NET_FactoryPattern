@@ -14,18 +14,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddWeatherHttpClients();  // This adds both HttpClients and caching
 
 // Register weather services
-builder.Services.AddScoped<MockWeatherClient>();
-builder.Services.AddScoped<OpenMeteoClient>();
-
-//// Register cache and retry services
-//builder.Services.AddSingleton<ICacheService, MemoryCacheService>();
-//builder.Services.AddScoped<IRetryPolicyService, SimpleRetryPolicyService>();
-
-//// Register factory
-//builder.Services.AddScoped<IWeatherClientFactory, WeatherClientFactory>();
+builder.Services.AddScoped<IWeatherClient, OpenMeteoClient>();
 
 // Register use case
-builder.Services.AddScoped<GetCurrentWeatherService>();
+builder.Services.AddScoped<IWeatherService, GetCurrentWeatherService>();
 
 // Register logging
 builder.Services.AddLogging();

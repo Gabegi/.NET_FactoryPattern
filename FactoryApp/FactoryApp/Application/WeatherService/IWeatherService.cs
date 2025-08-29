@@ -5,6 +5,6 @@ namespace FactoryApp.Application.UseCases
 {
     public interface IWeatherService
     {
-        Task<WeatherResponseDTO?> GetWeatherAsync(WeatherRequest request);
+        Task<WeatherResponseDTO?> GetCurrentWeatherAsync(WeatherRequest request);
     }
 }
