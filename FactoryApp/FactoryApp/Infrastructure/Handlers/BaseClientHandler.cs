@@ -5,17 +5,21 @@ using FactoryApp.Infrastructure.Interfaces;
 public class BaseClientHandler : IBaseClientHandler
 {
     private readonly ILogger<BaseClientHandler> _logger;
+    private readonly IServiceCollection _services;
 
-    public BaseClientHandler(ILogger<BaseClientHandler> logger)
+    public BaseClientHandler(
+        ILogger<BaseClientHandler> logger,
+        IServiceCollection services)
     {
         _logger = logger;
+        _services = services;
     }
 
-    public IHttpClientBuilder CreateBaseClient(IServiceCollection services, WeatherRequest request)
+    public IHttpClientBuilder CreateBaseClient(WeatherRequest request)
     {
         _logger.LogInformation($"Creating Client Builder for {request.ServiceName} ({request.Region}, {request.Environment})");
 
-        return services.AddHttpClient($"{request.ServiceName}_client", client =>
+        return _services.AddHttpClient($"{request.ServiceName}_client", client =>
         {
             ConfigureBaseClient(client, request);
         });
