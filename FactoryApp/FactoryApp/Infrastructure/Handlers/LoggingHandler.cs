@@ -1,5 +1,4 @@
-﻿using FactoryApp.Application.WeatherService;
-using FactoryApp.Domain;
+﻿using FactoryApp.Domain;
 using System.Diagnostics;
 
 namespace FactoryApp.Infrastructure.Handlers
