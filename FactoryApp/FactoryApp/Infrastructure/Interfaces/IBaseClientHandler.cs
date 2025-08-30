@@ -4,6 +4,6 @@ namespace FactoryApp.Infrastructure.Interfaces
 {
     public interface IBaseClientHandler
     {
-        IHttpClientBuilder CreateBaseClient(WeatherRequest request);
+        void ConfigureBaseClient(HttpClient client, WeatherRequest request);
     }
 }

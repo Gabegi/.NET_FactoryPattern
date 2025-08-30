@@ -5,27 +5,14 @@ using FactoryApp.Infrastructure.Interfaces;
 public class BaseClientHandler : IBaseClientHandler
 {
     private readonly ILogger<BaseClientHandler> _logger;
-    private readonly IServiceCollection _services;
 
     public BaseClientHandler(
-        ILogger<BaseClientHandler> logger,
-        IServiceCollection services)
+        ILogger<BaseClientHandler> logger)
     {
         _logger = logger;
-        _services = services;
     }
 
-    public IHttpClientBuilder CreateBaseClient(WeatherRequest request)
-    {
-        _logger.LogInformation($"Creating Client Builder for {request.ServiceName} ({request.Region}, {request.Environment})");
-
-        return _services.AddHttpClient($"{request.ServiceName}_client", client =>
-        {
-            ConfigureBaseClient(client, request);
-        });
-    }
-
-    private void ConfigureBaseClient(HttpClient client, WeatherRequest request)
+    public void ConfigureBaseClient(HttpClient client, WeatherRequest request)
     {
         var serviceConfig = request.ServiceType.GetServiceConfig();
 
@@ -35,8 +22,6 @@ public class BaseClientHandler : IBaseClientHandler
         client.BaseAddress = new Uri(serviceConfig.Url +
             $"?latitude={serviceConfig.Latitude}&longitude={serviceConfig.Longitude}&current_weather=true");
 
-        client.Timeout = TimeSpan.FromSeconds(request.CustomTimeoutSeconds > 0
-            ? request.CustomTimeoutSeconds
-            : serviceConfig.TimeoutSecond);
+        client.Timeout = TimeSpan.FromSeconds(serviceConfig.TimeoutSecond);
     }
 }
