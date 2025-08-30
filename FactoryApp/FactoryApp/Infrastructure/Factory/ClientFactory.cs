@@ -8,13 +8,17 @@ namespace FactoryApp.Infrastructure.Patterns
     {
         private readonly IBaseClientHandler _baseClient;
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IHttpClientBuilder _clientBuilder;
+
 
         public ClientFactory(
             IBaseClientHandler baseClient,
-            IHttpClientFactory httpClientFactory)
+            IHttpClientFactory httpClientFactory,
+            IHttpClientBuilder httpClientBuilder)
         {
             _baseClient = baseClient;
             _httpClientFactory = httpClientFactory;
+            _clientBuilder = httpClientBuilder;
         }
 
         public HttpClient Create(WeatherRequest request)
@@ -22,21 +26,23 @@ namespace FactoryApp.Infrastructure.Patterns
             var clientName = $"{request.ServiceName}_client";
 
             // Start with base client configuration
-            var clientBuilder = _baseClient.CreateBaseClient(request);
+
+            var httpClient = _httpClientFactory.CreateClient(clientName);
+            _baseClient.ConfigureBaseClient(httpClient, request);
 
             if (request.EnableLogging is true)
             {
-                clientBuilder.AddHttpMessageHandler<LoggingHandler>();
+                _clientBuilder.AddHttpMessageHandler<LoggingHandler>();
             }
 
             if (request.EnableCaching is true)
             {
-                clientBuilder.AddHttpMessageHandler<CachingHandler>();
+                _clientBuilder.AddHttpMessageHandler<CachingHandler>();
             }
 
             if (request.EnableResilience)
             {
-                clientBuilder.AddStandardResilienceHandler(options =>
+                _clientBuilder.AddStandardResilienceHandler(options =>
                 {
                     options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
                     options.Retry.MaxRetryAttempts = 5;
