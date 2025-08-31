@@ -8,11 +8,17 @@ namespace FactoryApp.Infrastructure.Extensions
     {
         public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
         {
-            // Add required dependencies
+            // Tokyo Dev Client
             services.AddHttpClient();
             services.AddLogging();
             services.AddHybridCache(); // Required for CachingHandler
 
+            services.AddHttpClient("TokyoDevUser", client =>
+            {
+                client.BaseAddress = new Uri("https://api.open-meteo.com/");
+            })
+            .AddHttpMessageHandler<LoggingHandler>()
+            .AddHttpMessageHandler<CachingHandler>();
 
             // Add handlers
             services.AddTransient<CachingHandler>();
