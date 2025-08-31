@@ -20,7 +20,7 @@ public class OpenMeteoClient : IWeatherClient
 
     public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequest request)
     {
-        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ServiceName}, environment {request.Environment}");
+        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ClientName}, environment {request.Environment}");
 
         // Create HttpClient using the factory with all configured handlers
         using var httpClient = _clientFactory.Create(request);
@@ -37,18 +37,18 @@ public class OpenMeteoClient : IWeatherClient
                 PropertyNameCaseInsensitive = true
             });
 
-            _logger.LogInformation($"Successfully retrieved weather data for service {request.ServiceName}");
+            _logger.LogInformation($"Successfully retrieved weather data for service {request.ClientName}");
             return weather;
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, $"Error fetching weather data from Open-Meteo API for service {request.ServiceName}");
+            _logger.LogError(ex, $"Error fetching weather data from Open-Meteo API for service {request.ClientName}");
 
             return null;
         }
         catch (JsonException ex)
         {
-            _logger.LogError(ex, $"Error deserializing weather data for service {request.ServiceName}");
+            _logger.LogError(ex, $"Error deserializing weather data for service {request.ClientName}");
 
             return null;
         }

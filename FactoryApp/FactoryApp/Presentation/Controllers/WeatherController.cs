@@ -31,7 +31,7 @@ public class WeatherController : ControllerBase
         {
             var request = new WeatherRequest
             {
-                ServiceName = serviceType.ToString(),
+                ClientName = serviceType.ToString(),
                 Environment = environment
             };
 

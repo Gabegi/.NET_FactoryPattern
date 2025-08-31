@@ -4,7 +4,7 @@ namespace FactoryApp.Application.WeatherService
 {
     public class WeatherRequest
     {
-        public string ServiceName { get; set; } = string.Empty;
+        public string ClientName { get; set; } = string.Empty;
 
         public string Environment { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;

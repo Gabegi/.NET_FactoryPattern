@@ -17,6 +17,12 @@ namespace FactoryApp.Infrastructure.Extensions
             {
                 client.BaseAddress = new Uri("https://api.open-meteo.com/");
             })
+            .AddHttpMessageHandler<LoggingHandler>();
+
+            services.AddHttpClient("TokyoPrdAdmin", client =>
+            {
+                client.BaseAddress = new Uri("https://api.open-meteo.com/");
+            })
             .AddHttpMessageHandler<LoggingHandler>()
             .AddHttpMessageHandler<CachingHandler>();
 
