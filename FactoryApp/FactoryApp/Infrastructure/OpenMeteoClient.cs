@@ -9,6 +9,7 @@ public class OpenMeteoClient : IWeatherClient
 {
     private readonly IClientFactory _clientFactory;
     private readonly ILogger<OpenMeteoClient> _logger;
+    private readonly string _url = string.Empty;
 
     public OpenMeteoClient(
         IClientFactory clientFactory,
@@ -28,7 +29,7 @@ public class OpenMeteoClient : IWeatherClient
         try
         {
             // Url defined in the factory
-            var response = await httpClient.GetAsync("");
+            var response = await httpClient.GetAsync(_url);
             response.EnsureSuccessStatusCode();
 
             var jsonString = await response.Content.ReadAsStringAsync();

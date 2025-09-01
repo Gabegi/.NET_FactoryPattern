@@ -15,14 +15,18 @@ namespace FactoryApp.Infrastructure.Extensions
 
             services.AddHttpClient("TokyoDevUser", client =>
             {
-                client.BaseAddress = new Uri("https://api.open-meteo.com/");
+                client.BaseAddress = new Uri("https://api.open-meteo.com/v1/forecast?latitude=35.67&longitude=139.75&current_weather=true");
             })
             .AddHttpMessageHandler<LoggingHandler>();
 
-            services.AddHttpClient("TokyoPrdAdmin", client =>
+            services.AddHttpClient("NewYorkPrdAdmin", client =>
             {
-                client.BaseAddress = new Uri("https://api.open-meteo.com/");
-                .AddStandardResilienceHandler(options =>
+                client.BaseAddress = new Uri("https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=74&current_weather=true");
+
+            })
+            .AddHttpMessageHandler<LoggingHandler>()
+            .AddHttpMessageHandler<CachingHandler>()
+            .AddStandardResilienceHandler(options =>
                 {
                     options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
                     options.Retry.MaxRetryAttempts = 5;
@@ -33,9 +37,6 @@ namespace FactoryApp.Infrastructure.Extensions
                     options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(5);
                     options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(1);
                 });
-            })
-            .AddHttpMessageHandler<LoggingHandler>()
-            .AddHttpMessageHandler<CachingHandler>();
 
             // Add handlers
             services.AddTransient<CachingHandler>();
