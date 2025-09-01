@@ -1,5 +1,4 @@
 ﻿using FactoryApp.Application.WeatherService;
-using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
 
 namespace FactoryApp.Infrastructure.Patterns
