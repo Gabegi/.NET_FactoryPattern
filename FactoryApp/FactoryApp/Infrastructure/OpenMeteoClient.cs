@@ -24,7 +24,7 @@ public class OpenMeteoClient : IWeatherClient
         _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ClientName}, environment {request.Environment}");
 
         // Create HttpClient using the factory with all configured handlers
-        using var httpClient = _clientFactory.Create(request);
+        var httpClient = _clientFactory.Create(request);
 
         try
         {

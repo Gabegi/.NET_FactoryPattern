@@ -5,19 +5,12 @@ namespace FactoryApp.Infrastructure.Patterns
 {
     public class ClientFactory : IClientFactory
     {
-        private readonly IBaseClientHandler _baseClient;
         private readonly IHttpClientFactory _httpClientFactory;
-        private readonly IHttpClientBuilder _clientBuilder;
-
 
         public ClientFactory(
-            IBaseClientHandler baseClient,
-            IHttpClientFactory httpClientFactory,
-            IHttpClientBuilder httpClientBuilder)
+            IHttpClientFactory httpClientFactory)
         {
-            _baseClient = baseClient;
             _httpClientFactory = httpClientFactory;
-            _clientBuilder = httpClientBuilder;
         }
 
         public HttpClient Create(WeatherRequest request)
