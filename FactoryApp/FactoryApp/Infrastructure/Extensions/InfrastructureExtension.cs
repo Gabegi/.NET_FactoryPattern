@@ -22,6 +22,17 @@ namespace FactoryApp.Infrastructure.Extensions
             services.AddHttpClient("TokyoPrdAdmin", client =>
             {
                 client.BaseAddress = new Uri("https://api.open-meteo.com/");
+                .AddStandardResilienceHandler(options =>
+                {
+                    options.TotalRequestTimeout.Timeout = TimeSpan.FromSeconds(60);
+                    options.Retry.MaxRetryAttempts = 5;
+                    options.Retry.Delay = TimeSpan.Zero;
+                    options.CircuitBreaker.SamplingDuration = TimeSpan.FromSeconds(5);
+                    options.CircuitBreaker.MinimumThroughput = 5;
+                    options.CircuitBreaker.FailureRatio = 0.9;
+                    options.CircuitBreaker.BreakDuration = TimeSpan.FromSeconds(5);
+                    options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(1);
+                });
             })
             .AddHttpMessageHandler<LoggingHandler>()
             .AddHttpMessageHandler<CachingHandler>();
