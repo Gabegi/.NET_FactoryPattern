@@ -1,7 +1,7 @@
 ﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Infrastructure.Interfaces;
 
-namespace FactoryApp.Infrastructure.Patterns
+namespace FactoryApp.Infrastructure.Factory
 {
     public class ClientFactory : IClientFactory
     {

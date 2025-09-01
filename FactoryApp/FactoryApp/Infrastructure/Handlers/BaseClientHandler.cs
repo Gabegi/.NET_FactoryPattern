@@ -2,26 +2,29 @@
 using FactoryApp.Domain.Extensions;
 using FactoryApp.Infrastructure.Interfaces;
 
-public class BaseClientHandler : IBaseClientHandler
+namespace FactoryApp.Infrastructure.Handlers
 {
-    private readonly ILogger<BaseClientHandler> _logger;
-
-    public BaseClientHandler(
-        ILogger<BaseClientHandler> logger)
+    public class BaseClientHandler : IBaseClientHandler
     {
-        _logger = logger;
-    }
+        private readonly ILogger<BaseClientHandler> _logger;
 
-    public void ConfigureBaseClient(HttpClient client, WeatherRequest request)
-    {
-        var serviceConfig = request.ServiceType.GetServiceConfig();
+        public BaseClientHandler(
+            ILogger<BaseClientHandler> logger)
+        {
+            _logger = logger;
+        }
 
-        if (string.IsNullOrEmpty(serviceConfig.Url))
-            throw new ArgumentNullException(nameof(serviceConfig.Url), "Service URL cannot be null.");
+        public void ConfigureBaseClient(HttpClient client, WeatherRequest request)
+        {
+            var serviceConfig = request.ServiceType.GetServiceConfig();
 
-        client.BaseAddress = new Uri(serviceConfig.Url +
-            $"?latitude={serviceConfig.Latitude}&longitude={serviceConfig.Longitude}&current_weather=true");
+            if (string.IsNullOrEmpty(serviceConfig.Url))
+                throw new ArgumentNullException(nameof(serviceConfig.Url), "Service URL cannot be null.");
 
-        client.Timeout = TimeSpan.FromSeconds(serviceConfig.TimeoutSecond);
+            client.BaseAddress = new Uri(serviceConfig.Url +
+                $"?latitude={serviceConfig.Latitude}&longitude={serviceConfig.Longitude}&current_weather=true");
+
+            client.Timeout = TimeSpan.FromSeconds(serviceConfig.TimeoutSecond);
+        }
     }
 }

@@ -1,5 +1,4 @@
 using FactoryApp.Application.UseCases;
-using FactoryApp.Infrastructure;
 using FactoryApp.Infrastructure.Extensions;
 using FactoryApp.Infrastructure.Interfaces;
 
@@ -16,13 +15,8 @@ builder.Services.AddWeatherHttpClients();  // This adds both HttpClient and hand
 // Register use case
 builder.Services.AddScoped<IWeatherService, GetCurrentWeatherService>();
 
-// Register weather services
+// Register weather client
 builder.Services.AddScoped<IWeatherClient, OpenMeteoClient>();
-
-
-
-// Register logging
-builder.Services.AddLogging();
 
 var app = builder.Build();
 
