@@ -11,19 +11,17 @@ namespace FactoryApp.Infrastructure.Extensions
     {
         public static IServiceCollection AddWeatherHttpClients(this IServiceCollection services)
         {
-            // Add required services
+            // Tokyo Dev Client
             services.AddHttpClient();
             services.AddLogging();
             services.AddHybridCache(); // Required for CachingHandler
 
-            // Tokyo Dev Client
             services.AddHttpClient("TokyoDevUser", client =>
             {
                 client.BaseAddress = new Uri("https://api.open-meteo.com/v1/forecast?latitude=35.67&longitude=139.75&current_weather=true");
             })
             .AddHttpMessageHandler<LoggingHandler>();
 
-            // New York Production Admin Client
             services.AddHttpClient("NewYorkPrdAdmin", client =>
             {
                 client.BaseAddress = new Uri("https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=74&current_weather=true");
@@ -46,12 +44,12 @@ namespace FactoryApp.Infrastructure.Extensions
             services.AddTransient<CachingHandler>(provider => 
                 new CachingHandler(
                     provider.GetRequiredService<HybridCache>(), 
-                    WeatherServiceType.OpenMeteo));
+                    WeatherServiceType.TokyoDevUser));
             
             services.AddTransient<LoggingHandler>(provider => 
                 new LoggingHandler(
                     provider.GetRequiredService<ILogger<LoggingHandler>>(), 
-                    WeatherServiceType.OpenMeteo));
+                    WeatherServiceType.TokyoDevUser));
 
             // Add core infrastructure services
             services.AddTransient<IBaseClientHandler, BaseClientHandler>(); 
