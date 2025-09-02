@@ -22,9 +22,7 @@ public class WeatherController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> Get(
-        [FromQuery] WeatherServiceType serviceType,
-        [FromQuery] string environment,
-        [FromQuery] string user
+        [FromQuery] WeatherServiceType serviceType
         )
     {
         try
@@ -32,7 +30,6 @@ public class WeatherController : ControllerBase
             var request = new WeatherRequest
             {
                 ClientName = serviceType.ToString(),
-                Environment = environment
             };
 
             var response = await _weatherService.GetCurrentWeatherAsync(request);

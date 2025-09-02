@@ -21,7 +21,7 @@ public class OpenMeteoClient : IWeatherClient
 
     public async Task<Weather?> GetCurrentWeatherAsync(WeatherRequest request)
     {
-        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ClientName}, environment {request.Environment}");
+        _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ClientName}");
 
         // Create HttpClient using the factory with all configured handlers
         var httpClient = _clientFactory.Create(request);
