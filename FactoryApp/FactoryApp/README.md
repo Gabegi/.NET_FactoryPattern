@@ -24,9 +24,9 @@ Note: On some Windows setups you may need to run the terminal as Administrator i
 
 ## What this sample shows
 
-- A small factory (`ClientFactory`) that returns an `HttpClient` by name
+- A factory (`ClientFactory`) that returns an `HttpClient` by name
 - Custom `DelegatingHandler`s for logging and caching
-- Centralized DI registration via an extension method
+- Centralised DI registration via an extension method
 - Resilience configuration using `Microsoft.Extensions.Http.Resilience`
 
 ## Project layout
@@ -72,7 +72,7 @@ Packages used (see `.csproj`):
 The controller accepts `WeatherServiceType` via query string. Available values (see `Domain/WeatherServiceTypes.cs`):
 
 - `TokyoDevUser`
-- `TokyoPrdAdmin`
+- `NewYorkPrdAdmin`
 
 These enum values are decorated with attributes:
 
