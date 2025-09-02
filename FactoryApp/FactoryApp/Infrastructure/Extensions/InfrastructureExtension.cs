@@ -1,9 +1,7 @@
 ﻿using FactoryApp.Infrastructure.Handlers;
 using FactoryApp.Infrastructure.Interfaces;
-using FactoryApp.Infrastructure.Factory;
 using FactoryApp.Domain;
 using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.Http.Resilience;
 
 namespace FactoryApp.Infrastructure.Extensions
 {
@@ -53,7 +51,6 @@ namespace FactoryApp.Infrastructure.Extensions
 
             // Add core infrastructure services
             services.AddTransient<IBaseClientHandler, BaseClientHandler>(); 
-            services.AddTransient<IClientFactory, ClientFactory>();
 
             return services;
         }
