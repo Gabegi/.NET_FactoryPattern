@@ -107,8 +107,3 @@ curl "https://localhost:7001/api/weather?serviceType=TokyoDevUser" -k
 3. Call the service
 
 - Pass the new enum value as `serviceType` to `GET /api/weather`
-
-## Troubleshooting
-
-- Build errors about missing namespaces: ensure `Program.cs` has `using FactoryApp.Infrastructure;` so `OpenMeteoClient` resolves
-- Access denied on `dotnet run`: try running the terminal as Administrator or remove any locked binaries under `bin/Debug/net8.0`
