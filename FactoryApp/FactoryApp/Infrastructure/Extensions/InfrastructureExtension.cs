@@ -49,9 +49,6 @@ namespace FactoryApp.Infrastructure.Extensions
                     provider.GetRequiredService<ILogger<LoggingHandler>>(), 
                     WeatherServiceType.TokyoDevUser));
 
-            // Add core infrastructure services
-            services.AddTransient<IBaseClientHandler, BaseClientHandler>(); 
-
             return services;
         }
     }
