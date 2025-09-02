@@ -1,4 +1,4 @@
-using FactoryApp.Application.WeatherService;
+﻿using FactoryApp.Application.WeatherService;
 using FactoryApp.Domain;
 using FactoryApp.Infrastructure.Interfaces;
 using System.Text.Json;
@@ -7,12 +7,12 @@ namespace FactoryApp.Infrastructure;
 
 public class OpenMeteoClient : IWeatherClient
 {
-    private readonly IClientFactory _clientFactory;
+    private readonly IHttpClientFactory _clientFactory;
     private readonly ILogger<OpenMeteoClient> _logger;
     private readonly string _url = string.Empty;
 
     public OpenMeteoClient(
-        IClientFactory clientFactory,
+        IHttpClientFactory clientFactory,
         ILogger<OpenMeteoClient> logger)
     {
         _clientFactory = clientFactory;
@@ -24,7 +24,7 @@ public class OpenMeteoClient : IWeatherClient
         _logger.LogInformation($"Fetching weather data from Open-Meteo API for service {request.ClientName}");
 
         // Create HttpClient using the factory with all configured handlers
-        var httpClient = _clientFactory.Create(request);
+        var httpClient = _clientFactory.CreateClient(request.ClientName);
 
         try
         {
