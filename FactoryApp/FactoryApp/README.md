@@ -1,96 +1,114 @@
-# FactoryApp - Factory Method Pattern Implementation
+# FactoryApp (Factory pattern with HttpClient + DI)
 
-This application demonstrates the **Factory Method Pattern** in a .NET Web API context, following the same structure as the DependencyInjectionApp and KeyedDependencyInjectionApp but using the Factory Method pattern to create service objects.
+This project demonstrates a pragmatic "factory" approach to creating typed `HttpClient` instances with custom handlers (logging, caching, resilience) in a .NET 8 Web API. It contrasts with the other samples in this repo by focusing on a lightweight factory plus DI registrations instead of keyed DI or abstract factories.
 
-## Architecture Overview
+## Quick start
 
-The application follows Clean Architecture principles with the following layers:
+- Build:
 
-- **Domain**: Contains the Weather entity
-- **Infrastructure**: Contains service implementations and the factory
-- **Application**: Contains use cases
-- **Presentation**: Contains controllers and DTOs
-
-## Factory Method Pattern Implementation
-
-### Key Components
-
-1. **IWeatherServiceFactory** (`Infrastructure/Factories/IWeatherServiceFactory.cs`)
-   - Factory interface that defines the contract for creating weather services
-
-2. **WeatherServiceFactory** (`Infrastructure/Factories/WeatherServiceFactory.cs`)
-   - Concrete factory implementation that creates different types of weather services based on a service type parameter
-
-3. **Weather Services**
-   - `MockWeatherService`: Returns mock weather data
-   - `OpenMeteoService`: Fetches real weather data from Open-Meteo API
-
-### How the Factory Method Works
-
-The Factory Method pattern is implemented as follows:
-
-1. The `IWeatherServiceFactory` interface defines a method to create weather services
-2. The `WeatherServiceFactory` concrete implementation uses a service type parameter to determine which service to create
-3. The `GetCurrentWeatherUseCase` uses the factory to get the appropriate service
-4. The controller accepts a `service` query parameter to specify which service to use
-
-## API Endpoints
-
-### GET /api/weather
-
-Retrieves current weather information.
-
-**Query Parameters:**
-- `lat` (optional): Latitude (default: 51.5)
-- `lon` (optional): Longitude (default: -0.1)
-- `service` (optional): Service type - "mock" or "openmeteo" (default: "openmeteo")
-
-**Example Requests:**
-```
-GET /api/weather?lat=40.7128&lon=-74.0060&service=openmeteo
-GET /api/weather?lat=40.7128&lon=-74.0060&service=mock
+```bash
+cd FactoryApp/FactoryApp
+dotnet build
 ```
 
-## Configuration
+- Run:
 
-The application uses configuration from `appsettings.json`:
-
-```json
-{
-  "WeatherApi": {
-    "TimeoutSeconds": 30,
-    "UserAgent": "FactoryApp/1.0"
-  }
-}
+```bash
+dotnet run
 ```
 
-## Running the Application
+- Swagger UI (development): `https://localhost:7001/swagger`
+- Weather endpoint: `GET https://localhost:7001/api/weather?serviceType=TokyoDevUser`
 
-1. Navigate to the FactoryApp directory
-2. Run the application:
-   ```bash
-   dotnet run
-   ```
-3. Access the API at `https://localhost:7001/api/weather`
-4. Access Swagger UI at `https://localhost:7001/swagger`
+Note: On some Windows setups you may need to run the terminal as Administrator if you hit an "Access is denied" when starting the app.
 
-## Factory Method Pattern Benefits
+## What this sample shows
 
-1. **Flexibility**: Easy to switch between different service implementations at runtime
-2. **Extensibility**: New service types can be added by implementing the interface and updating the factory
-3. **Separation of Concerns**: Service creation logic is centralized in the factory
-4. **Testability**: Easy to mock the factory for testing different scenarios
+- A small factory (`ClientFactory`) that returns an `HttpClient` by name
+- Custom `DelegatingHandler`s for logging and caching
+- Centralized DI registration via an extension method
+- Resilience configuration using `Microsoft.Extensions.Http.Resilience`
 
-## Comparison with Other Patterns
+## Project layout
 
-- **DependencyInjectionApp**: Uses direct dependency injection with multiple service registrations
-- **KeyedDependencyInjectionApp**: Uses .NET 8's keyed services for service selection
-- **FactoryApp**: Uses the Factory Method pattern for service creation and selection
+- `Application/WeatherService`
+  - `IWeatherService`, `GetCurrentWeatherService`, `WeatherRequest`
+- `Domain`
+  - `WeatherServiceTypes.cs` enum with attributes
+  - `Entities/Weather.cs`
+  - `Attributes/FeaturesAttribute.cs`, `Attributes/ServiceConfigAttribute.cs`
+- `Infrastructure`
+  - `Factory/ClientFactory.cs` (returns named `HttpClient`)
+  - `Handlers/LoggingHandler.cs`, `Handlers/CachingHandler.cs`, `Handlers/BaseClientHandler.cs`
+  - `Interfaces/` (`IClientFactory`, `IBaseClientHandler`, `IWeatherClient`)
+  - `OpenMeteoClient.cs` (calls the external API)
+  - `Extensions/InfrastructureExtension.cs` (DI wiring for clients/handlers/resilience)
+- `Presentation`
+  - `Controllers/WeatherController.cs` (exposes API)
+  - `DTOs/WeatherResponseDTO.cs`
+- `Program.cs` (service registration / pipeline)
 
-## Adding New Weather Services
+## Dependency Injection wiring
 
-To add a new weather service:
+All infrastructure services and typed `HttpClient`s are registered in `Infrastructure/Extensions/InfrastructureExtension.cs` via `AddWeatherHttpClients()` and consumed in `Program.cs`:
 
-1. Implement `IWeatherService` interface
-2. Register the service in `Program.cs`
-3. Update `WeatherServiceFactory.CreateWeatherService()` method to handle the new service type 
+- Registers base `HttpClient`, logging, `HybridCache`
+- Adds named clients (e.g., `TokyoDevUser`, `NewYorkPrdAdmin`)
+- Attaches handlers:
+  - `LoggingHandler` – request/response logging with timings
+  - `CachingHandler` – GET response caching backed by `HybridCache`
+- Applies resilience with `AddStandardResilienceHandler` (timeouts, retries, circuit breaker)
+- Registers `IBaseClientHandler`, `IClientFactory`
+
+Packages used (see `.csproj`):
+
+- `Microsoft.Extensions.Caching.Hybrid`
+- `Microsoft.Extensions.Http.Resilience`
+- `Microsoft.Extensions.Resilience`
+- `Swashbuckle.AspNetCore`
+
+## Weather service selection
+
+The controller accepts `WeatherServiceType` via query string. Available values (see `Domain/WeatherServiceTypes.cs`):
+
+- `TokyoDevUser`
+- `TokyoPrdAdmin`
+
+These enum values are decorated with attributes:
+
+- `ServiceConfigAttribute` provides base URL, region, environment, timezone, timeout, latitude/longitude
+- `FeaturesAttribute` toggles features like retry, caching, logging
+
+`BaseClientHandler` uses these attributes to set the base address and timeout for the created `HttpClient`.
+
+## API usage
+
+- GET `api/weather?serviceType=TokyoDevUser`
+  - Returns current weather data mapped to `WeatherResponseDTO`
+- Swagger UI shows the endpoint and schema in development.
+
+Example curl:
+
+```bash
+curl "https://localhost:7001/api/weather?serviceType=TokyoDevUser" -k
+```
+
+## Extending the sample
+
+1. Add a new service type
+
+- Add a new value to `Domain/WeatherServiceTypes.cs` and decorate it with `ServiceConfig` and `Features` attributes
+
+2. Register a named client
+
+- In `AddWeatherHttpClients()` add a new `AddHttpClient("<Name>")` for the new service
+- Attach handlers (logging, caching) and, if needed, tweak resilience
+
+3. Call the service
+
+- Pass the new enum value as `serviceType` to `GET /api/weather`
+
+## Troubleshooting
+
+- Build errors about missing namespaces: ensure `Program.cs` has `using FactoryApp.Infrastructure;` so `OpenMeteoClient` resolves
+- Access denied on `dotnet run`: try running the terminal as Administrator or remove any locked binaries under `bin/Debug/net8.0`
