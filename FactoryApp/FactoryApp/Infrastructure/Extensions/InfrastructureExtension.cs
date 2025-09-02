@@ -42,12 +42,12 @@ namespace FactoryApp.Infrastructure.Extensions
             services.AddTransient<CachingHandler>(provider => 
                 new CachingHandler(
                     provider.GetRequiredService<HybridCache>(), 
-                    WeatherServiceType.TokyoDevUser));
+                    WeatherServiceType.NewYorkPrdAdmin));
             
             services.AddTransient<LoggingHandler>(provider => 
                 new LoggingHandler(
                     provider.GetRequiredService<ILogger<LoggingHandler>>(), 
-                    WeatherServiceType.TokyoDevUser));
+                    WeatherServiceType.NewYorkPrdAdmin));
 
             return services;
         }
